@@ -132,6 +132,28 @@ const native: TranslationStrings = {
   'native.widget.votes': 'hlasov',
   'native.widget.noMessages': 'Zatiaľ žiadne správy',
   'native.widget.departure': 'Odchod',
+  'native.access.toggle': 'Prístup cez proxy',
+  'native.access.hint':
+    'Pre server za zero trust proxy, napríklad Cloudflare Access. Aplikácia ich posiela len tomuto serveru.',
+  'native.access.headerName': 'Názov hlavičky',
+  'native.access.headerValue': 'Hodnota',
+  'native.access.addHeader': 'Pridať hlavičku',
+  'native.access.removeHeader': 'Odstrániť hlavičku',
+  'native.access.certificate': 'Klientsky certifikát',
+  'native.access.chooseCertificate': 'Vybrať certifikát',
+  'native.access.certificatePassword': 'Heslo certifikátu',
+  'native.access.removeCertificate': 'Odstrániť certifikát',
+  'native.access.errorName': 'Hlavička {row} má názov, ktorý aplikácia nemôže odoslať.',
+  'native.access.errorValue': 'Hlavička {row} potrebuje hodnotu na jednom riadku.',
+  'native.access.errorDuplicate': 'Hlavička {row} už je v zozname.',
+  'native.access.errorTooMany': 'To je viac hlavičiek, než aplikácia dokáže odoslať.',
+  'native.access.errorPassword': 'Toto heslo certifikát neotvorí.',
+  'native.access.errorCertificate': 'Aplikácia tento certifikát nemôže použiť. Vyberte súbor .p12 alebo .pfx.',
+  'native.access.loginHosts': 'Prihlasovacie domény',
+  'native.access.loginHostsHint':
+    'Domény prihlasovacej stránky proxy, napríklad tímová doména Cloudflare Access alebo adresa Pangolinu. Otvárajú sa v aplikácii, takže prihlásenie tam platí aj tu.',
+  'native.access.errorLoginHost': '{host} nie je doména, ktorú aplikácia dokáže otvoriť.',
+  'native.access.errorLoginHostsTooMany': 'To je viac prihlasovacích domén, než aplikácia uloží.',
 };
 
 export default native;

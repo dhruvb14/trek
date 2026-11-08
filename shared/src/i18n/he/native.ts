@@ -130,6 +130,27 @@ const native: TranslationStrings = {
   'native.widget.votes': 'קולות',
   'native.widget.noMessages': 'אין עדיין הודעות',
   'native.widget.departure': 'יציאה',
+  'native.access.toggle': 'גישה דרך פרוקסי',
+  'native.access.hint': 'לשרת שמאחורי פרוקסי zero trust כמו Cloudflare Access. האפליקציה שולחת אותם לשרת הזה בלבד.',
+  'native.access.headerName': 'שם הכותרת',
+  'native.access.headerValue': 'ערך',
+  'native.access.addHeader': 'הוספת כותרת',
+  'native.access.removeHeader': 'הסרת כותרת',
+  'native.access.certificate': 'אישור לקוח',
+  'native.access.chooseCertificate': 'בחירת אישור',
+  'native.access.certificatePassword': 'סיסמת האישור',
+  'native.access.removeCertificate': 'הסרת האישור',
+  'native.access.errorName': 'לכותרת {row} יש שם שהאפליקציה לא יכולה לשלוח.',
+  'native.access.errorValue': 'כותרת {row} צריכה ערך בשורה אחת.',
+  'native.access.errorDuplicate': 'כותרת {row} כבר ברשימה.',
+  'native.access.errorTooMany': 'אלה יותר כותרות ממה שהאפליקציה יכולה לשלוח.',
+  'native.access.errorPassword': 'הסיסמה לא פותחת את האישור הזה.',
+  'native.access.errorCertificate': 'האפליקציה לא יכולה להשתמש באישור הזה. יש לבחור קובץ ‎.p12 או ‎.pfx.',
+  'native.access.loginHosts': 'דומיינים להתחברות',
+  'native.access.loginHostsHint':
+    'הדומיינים של דף ההתחברות של הפרוקסי, למשל דומיין הצוות ב-Cloudflare Access או כתובת ה-Pangolin. הם נפתחים בתוך האפליקציה, כך שהתחברות שם תקפה גם כאן.',
+  'native.access.errorLoginHost': '{host} אינו דומיין שהאפליקציה יכולה לפתוח.',
+  'native.access.errorLoginHostsTooMany': 'אלה יותר דומיינים להתחברות ממה שהאפליקציה יכולה לשמור.',
 };
 
 export default native;

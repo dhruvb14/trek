@@ -133,6 +133,28 @@ const native: TranslationStrings = {
   'native.widget.votes': 'häält',
   'native.widget.noMessages': 'Sõnumeid veel pole',
   'native.widget.departure': 'Väljasõit',
+  'native.access.toggle': 'Ligipääs puhverserveri kaudu',
+  'native.access.hint':
+    'Serverile, mis on zero trust puhverserveri, näiteks Cloudflare Accessi taga. Rakendus saadab need ainult sellele serverile.',
+  'native.access.headerName': 'Päise nimi',
+  'native.access.headerValue': 'Väärtus',
+  'native.access.addHeader': 'Lisa päis',
+  'native.access.removeHeader': 'Eemalda päis',
+  'native.access.certificate': 'Kliendi sertifikaat',
+  'native.access.chooseCertificate': 'Vali sertifikaat',
+  'native.access.certificatePassword': 'Sertifikaadi parool',
+  'native.access.removeCertificate': 'Eemalda sertifikaat',
+  'native.access.errorName': 'Päisel {row} on nimi, mida rakendus ei saa saata.',
+  'native.access.errorValue': 'Päis {row} vajab ühel real olevat väärtust.',
+  'native.access.errorDuplicate': 'Päis {row} on juba loendis.',
+  'native.access.errorTooMany': 'Seda on rohkem päiseid, kui rakendus saata suudab.',
+  'native.access.errorPassword': 'See parool ei ava seda sertifikaati.',
+  'native.access.errorCertificate': 'Rakendus ei saa seda sertifikaati kasutada. Vali .p12 või .pfx fail.',
+  'native.access.loginHosts': 'Sisselogimise domeenid',
+  'native.access.loginHostsHint':
+    'Puhverserveri sisselogimislehe domeenid, näiteks Cloudflare Accessi meeskonnadomeen või Pangolini aadress. Need avanevad rakenduses, nii et seal sisse logides oled ka siin sisse logitud.',
+  'native.access.errorLoginHost': '{host} ei ole domeen, mida rakendus avada saab.',
+  'native.access.errorLoginHostsTooMany': 'Seda on rohkem sisselogimise domeene, kui rakendus hoida suudab.',
 };
 
 export default native;

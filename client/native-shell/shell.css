@@ -1259,3 +1259,77 @@ a.linkbtn {
     padding-top: 10px;
   }
 }
+
+/* ── Access through a proxy (access.ts) ──────────────────────────────────── */
+.access {
+  text-align: start;
+}
+.access summary {
+  cursor: pointer;
+  color: var(--muted);
+  font-size: 0.9rem;
+  font-weight: 500;
+  padding: 10px 0;
+  text-align: center;
+}
+.access-body {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.access-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.access-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.access-row .field {
+  flex: 1;
+  min-width: 0;
+}
+.access-row .field input,
+.access-cert .field input,
+.access-login .field input {
+  padding: 10px 14px;
+  font-size: 0.9rem;
+}
+.access-row.bad .field input {
+  border-color: var(--danger);
+}
+.access-remove {
+  font: inherit;
+  font-size: 1.2rem;
+  width: 36px;
+  height: 36px;
+  flex: none;
+  border: 0;
+  border-radius: 999px;
+  background: none;
+  color: var(--muted);
+  cursor: pointer;
+}
+.access-remove:active {
+  color: var(--ink);
+}
+.access-cert,
+.access-login {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 10px;
+  border-top: 1px solid var(--edge);
+}
+.access-label {
+  color: var(--muted);
+  font-size: 0.86rem;
+  font-weight: 500;
+}
+.access-subject {
+  color: var(--ink);
+  font-size: 0.9rem;
+  overflow-wrap: anywhere;
+}

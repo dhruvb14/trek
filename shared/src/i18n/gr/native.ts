@@ -136,6 +136,29 @@ const native: TranslationStrings = {
   'native.widget.votes': 'ψήφοι',
   'native.widget.noMessages': 'Δεν υπάρχουν ακόμα μηνύματα',
   'native.widget.departure': 'Αναχώρηση',
+  'native.access.toggle': 'Πρόσβαση μέσω proxy',
+  'native.access.hint':
+    'Για διακομιστή πίσω από proxy zero trust όπως το Cloudflare Access. Η εφαρμογή τα στέλνει μόνο σε αυτόν τον διακομιστή.',
+  'native.access.headerName': 'Όνομα κεφαλίδας',
+  'native.access.headerValue': 'Τιμή',
+  'native.access.addHeader': 'Προσθήκη κεφαλίδας',
+  'native.access.removeHeader': 'Αφαίρεση κεφαλίδας',
+  'native.access.certificate': 'Πιστοποιητικό πελάτη',
+  'native.access.chooseCertificate': 'Επιλογή πιστοποιητικού',
+  'native.access.certificatePassword': 'Κωδικός πιστοποιητικού',
+  'native.access.removeCertificate': 'Αφαίρεση πιστοποιητικού',
+  'native.access.errorName': 'Η κεφαλίδα {row} έχει όνομα που η εφαρμογή δεν μπορεί να στείλει.',
+  'native.access.errorValue': 'Η κεφαλίδα {row} χρειάζεται τιμή σε μία γραμμή.',
+  'native.access.errorDuplicate': 'Η κεφαλίδα {row} υπάρχει ήδη στη λίστα.',
+  'native.access.errorTooMany': 'Είναι περισσότερες κεφαλίδες από όσες μπορεί να στείλει η εφαρμογή.',
+  'native.access.errorPassword': 'Ο κωδικός δεν ανοίγει αυτό το πιστοποιητικό.',
+  'native.access.errorCertificate':
+    'Η εφαρμογή δεν μπορεί να χρησιμοποιήσει αυτό το πιστοποιητικό. Επιλέξτε αρχείο .p12 ή .pfx.',
+  'native.access.loginHosts': 'Τομείς σύνδεσης',
+  'native.access.loginHostsHint':
+    'Οι τομείς της σελίδας σύνδεσης του proxy, όπως ο τομέας ομάδας του Cloudflare Access ή η διεύθυνση του Pangolin. Ανοίγουν μέσα στην εφαρμογή, ώστε η σύνδεση εκεί να ισχύει και εδώ.',
+  'native.access.errorLoginHost': 'Το {host} δεν είναι τομέας που μπορεί να ανοίξει η εφαρμογή.',
+  'native.access.errorLoginHostsTooMany': 'Είναι περισσότεροι τομείς σύνδεσης από όσους μπορεί να κρατήσει η εφαρμογή.',
 };
 
 export default native;

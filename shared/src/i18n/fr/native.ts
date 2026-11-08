@@ -135,6 +135,28 @@ const native: TranslationStrings = {
   'native.widget.votes': 'voix',
   'native.widget.noMessages': 'Pas encore de messages',
   'native.widget.departure': 'Départ',
+  'native.access.toggle': 'Accès via un proxy',
+  'native.access.hint':
+    'Pour un serveur derrière un proxy zero trust comme Cloudflare Access. L’app les envoie uniquement à ce serveur.',
+  'native.access.headerName': 'Nom de l’en-tête',
+  'native.access.headerValue': 'Valeur',
+  'native.access.addHeader': 'Ajouter un en-tête',
+  'native.access.removeHeader': 'Supprimer l’en-tête',
+  'native.access.certificate': 'Certificat client',
+  'native.access.chooseCertificate': 'Choisir un certificat',
+  'native.access.certificatePassword': 'Mot de passe du certificat',
+  'native.access.removeCertificate': 'Supprimer le certificat',
+  'native.access.errorName': 'L’en-tête {row} a un nom que l’app ne peut pas envoyer.',
+  'native.access.errorValue': 'L’en-tête {row} a besoin d’une valeur sur une seule ligne.',
+  'native.access.errorDuplicate': 'L’en-tête {row} figure déjà dans la liste.',
+  'native.access.errorTooMany': 'C’est plus d’en-têtes que l’app ne peut en envoyer.',
+  'native.access.errorPassword': 'Ce mot de passe n’ouvre pas ce certificat.',
+  'native.access.errorCertificate': 'L’app ne peut pas utiliser ce certificat. Choisissez un fichier .p12 ou .pfx.',
+  'native.access.loginHosts': 'Domaines de connexion',
+  'native.access.loginHostsHint':
+    'Les domaines de la page de connexion du proxy, comme votre domaine d’équipe Cloudflare Access ou votre adresse Pangolin. Ils s’ouvrent dans l’app, pour que la connexion y reste valable ici.',
+  'native.access.errorLoginHost': '{host} n’est pas un domaine que l’app peut ouvrir.',
+  'native.access.errorLoginHostsTooMany': 'C’est plus de domaines de connexion que l’app ne peut en garder.',
 };
 
 export default native;

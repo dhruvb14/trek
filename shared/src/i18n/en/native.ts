@@ -133,6 +133,28 @@ const native: TranslationStrings = {
   'native.widget.votes': 'votes',
   'native.widget.noMessages': 'No messages yet',
   'native.widget.departure': 'Departure',
+  'native.access.toggle': 'Access through a proxy',
+  'native.access.hint':
+    'For a server behind a zero-trust proxy such as Cloudflare Access. The app sends these to this server only.',
+  'native.access.headerName': 'Header name',
+  'native.access.headerValue': 'Value',
+  'native.access.addHeader': 'Add header',
+  'native.access.removeHeader': 'Remove header',
+  'native.access.certificate': 'Client certificate',
+  'native.access.chooseCertificate': 'Choose certificate',
+  'native.access.certificatePassword': 'Certificate password',
+  'native.access.removeCertificate': 'Remove certificate',
+  'native.access.errorName': 'Header {row} has a name the app cannot send.',
+  'native.access.errorValue': 'Header {row} needs a value on a single line.',
+  'native.access.errorDuplicate': 'Header {row} is already in the list.',
+  'native.access.errorTooMany': 'That is more headers than the app can send.',
+  'native.access.errorPassword': 'The password does not open this certificate.',
+  'native.access.errorCertificate': 'The app cannot use this certificate. Choose a .p12 or .pfx file.',
+  'native.access.loginHosts': 'Sign-in domains',
+  'native.access.loginHostsHint':
+    "The domains of the proxy's login page, such as your Cloudflare Access team domain or your Pangolin address. They open inside the app, so signing in there keeps you signed in here.",
+  'native.access.errorLoginHost': '{host} is not a domain the app can open.',
+  'native.access.errorLoginHostsTooMany': 'That is more sign-in domains than the app can keep.',
 };
 
 export default native;

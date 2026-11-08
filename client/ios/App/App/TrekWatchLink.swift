@@ -223,7 +223,8 @@ enum TrekWatchWriter {
         perform(request) { _, ok in finish(ok) }
     }
 
-    /// Sends a request with the WebView's session (its cookies for the server).
+    /// Sends a request with the WebView's session (its cookies for the server)
+    /// and the access headers and certificate a proxy in front of it wants (TrekAccess).
     /// Called on the main queue; `completion` runs on a background queue.
     static func perform(_ request: URLRequest, completion: @escaping (Data?, Bool) -> Void) {
         WKWebsiteDataStore.default().httpCookieStore.getAllCookies { cookies in
@@ -237,7 +238,7 @@ enum TrekWatchWriter {
             for (field, value) in HTTPCookie.requestHeaderFields(with: session) {
                 signed.setValue(value, forHTTPHeaderField: field)
             }
-            URLSession.shared.dataTask(with: signed) { data, response, error in
+            TrekAccessSession.shared.dataTask(with: signed) { data, response, error in
                 let status = (response as? HTTPURLResponse)?.statusCode ?? 0
                 completion(data, error == nil && (200..<300).contains(status))
             }.resume()

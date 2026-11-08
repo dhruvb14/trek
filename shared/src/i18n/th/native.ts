@@ -130,6 +130,28 @@ const native: TranslationStrings = {
   'native.widget.votes': 'เสียง',
   'native.widget.noMessages': 'ยังไม่มีข้อความ',
   'native.widget.departure': 'ออกเดินทาง',
+  'native.access.toggle': 'เข้าถึงผ่านพร็อกซี',
+  'native.access.hint':
+    'สำหรับเซิร์ฟเวอร์ที่อยู่หลังพร็อกซีแบบ zero trust เช่น Cloudflare Access แอปจะส่งข้อมูลนี้ไปยังเซิร์ฟเวอร์นี้เท่านั้น',
+  'native.access.headerName': 'ชื่อเฮดเดอร์',
+  'native.access.headerValue': 'ค่า',
+  'native.access.addHeader': 'เพิ่มเฮดเดอร์',
+  'native.access.removeHeader': 'ลบเฮดเดอร์',
+  'native.access.certificate': 'ใบรับรองไคลเอนต์',
+  'native.access.chooseCertificate': 'เลือกใบรับรอง',
+  'native.access.certificatePassword': 'รหัสผ่านใบรับรอง',
+  'native.access.removeCertificate': 'ลบใบรับรอง',
+  'native.access.errorName': 'เฮดเดอร์ {row} มีชื่อที่แอปส่งไม่ได้',
+  'native.access.errorValue': 'เฮดเดอร์ {row} ต้องมีค่าในบรรทัดเดียว',
+  'native.access.errorDuplicate': 'เฮดเดอร์ {row} อยู่ในรายการแล้ว',
+  'native.access.errorTooMany': 'จำนวนเฮดเดอร์มากกว่าที่แอปส่งได้',
+  'native.access.errorPassword': 'รหัสผ่านนี้เปิดใบรับรองไม่ได้',
+  'native.access.errorCertificate': 'แอปใช้ใบรับรองนี้ไม่ได้ โปรดเลือกไฟล์ .p12 หรือ .pfx',
+  'native.access.loginHosts': 'โดเมนสำหรับลงชื่อเข้าใช้',
+  'native.access.loginHostsHint':
+    'โดเมนของหน้าลงชื่อเข้าใช้ของพร็อกซี เช่น โดเมนทีม Cloudflare Access หรือที่อยู่ Pangolin ของคุณ หน้าเหล่านี้จะเปิดในแอป การลงชื่อเข้าใช้ที่นั่นจึงมีผลที่นี่ด้วย',
+  'native.access.errorLoginHost': '{host} ไม่ใช่โดเมนที่แอปเปิดได้',
+  'native.access.errorLoginHostsTooMany': 'จำนวนโดเมนสำหรับลงชื่อเข้าใช้มากกว่าที่แอปเก็บได้',
 };
 
 export default native;

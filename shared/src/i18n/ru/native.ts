@@ -134,6 +134,28 @@ const native: TranslationStrings = {
   'native.widget.votes': 'голосов',
   'native.widget.noMessages': 'Сообщений пока нет',
   'native.widget.departure': 'Отъезд',
+  'native.access.toggle': 'Доступ через прокси',
+  'native.access.hint':
+    'Для сервера за прокси zero trust, например Cloudflare Access. Приложение отправляет их только этому серверу.',
+  'native.access.headerName': 'Имя заголовка',
+  'native.access.headerValue': 'Значение',
+  'native.access.addHeader': 'Добавить заголовок',
+  'native.access.removeHeader': 'Удалить заголовок',
+  'native.access.certificate': 'Клиентский сертификат',
+  'native.access.chooseCertificate': 'Выбрать сертификат',
+  'native.access.certificatePassword': 'Пароль сертификата',
+  'native.access.removeCertificate': 'Удалить сертификат',
+  'native.access.errorName': 'У заголовка {row} имя, которое приложение не может отправить.',
+  'native.access.errorValue': 'Заголовку {row} нужно значение в одну строку.',
+  'native.access.errorDuplicate': 'Заголовок {row} уже есть в списке.',
+  'native.access.errorTooMany': 'Это больше заголовков, чем приложение может отправить.',
+  'native.access.errorPassword': 'Этот пароль не открывает сертификат.',
+  'native.access.errorCertificate': 'Приложение не может использовать этот сертификат. Выберите файл .p12 или .pfx.',
+  'native.access.loginHosts': 'Домены входа',
+  'native.access.loginHostsHint':
+    'Домены страницы входа прокси, например домен команды Cloudflare Access или адрес Pangolin. Они открываются внутри приложения, поэтому вход там сохраняется и здесь.',
+  'native.access.errorLoginHost': '{host} не домен, который приложение может открыть.',
+  'native.access.errorLoginHostsTooMany': 'Это больше доменов входа, чем приложение может сохранить.',
 };
 
 export default native;

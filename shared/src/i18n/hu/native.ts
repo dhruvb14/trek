@@ -135,6 +135,28 @@ const native: TranslationStrings = {
   'native.widget.votes': 'szavazat',
   'native.widget.noMessages': 'Még nincs üzenet',
   'native.widget.departure': 'Indulás',
+  'native.access.toggle': 'Hozzáférés proxyn keresztül',
+  'native.access.hint':
+    'Zero trust proxy, például Cloudflare Access mögötti szerverhez. Az app csak ennek a szervernek küldi el őket.',
+  'native.access.headerName': 'Fejléc neve',
+  'native.access.headerValue': 'Érték',
+  'native.access.addHeader': 'Fejléc hozzáadása',
+  'native.access.removeHeader': 'Fejléc eltávolítása',
+  'native.access.certificate': 'Kliens tanúsítvány',
+  'native.access.chooseCertificate': 'Tanúsítvány kiválasztása',
+  'native.access.certificatePassword': 'A tanúsítvány jelszava',
+  'native.access.removeCertificate': 'Tanúsítvány eltávolítása',
+  'native.access.errorName': 'A(z) {row}. fejléc neve olyan, amit az app nem tud elküldeni.',
+  'native.access.errorValue': 'A(z) {row}. fejléchez egysoros érték kell.',
+  'native.access.errorDuplicate': 'A(z) {row}. fejléc már szerepel a listában.',
+  'native.access.errorTooMany': 'Ez több fejléc, mint amennyit az app el tud küldeni.',
+  'native.access.errorPassword': 'Ez a jelszó nem nyitja meg a tanúsítványt.',
+  'native.access.errorCertificate': 'Az app nem tudja használni ezt a tanúsítványt. Válassz .p12 vagy .pfx fájlt.',
+  'native.access.loginHosts': 'Bejelentkezési domainek',
+  'native.access.loginHostsHint':
+    'A proxy bejelentkezési oldalának domainjei, például a Cloudflare Access csapatdomain vagy a Pangolin címe. Az appon belül nyílnak meg, így az ottani bejelentkezés itt is érvényes.',
+  'native.access.errorLoginHost': '{host} nem olyan domain, amelyet az app meg tud nyitni.',
+  'native.access.errorLoginHostsTooMany': 'Ez több bejelentkezési domain, mint amennyit az app meg tud tartani.',
 };
 
 export default native;

@@ -129,6 +129,27 @@ const native: TranslationStrings = {
   'native.widget.votes': '票',
   'native.widget.noMessages': '還沒有訊息',
   'native.widget.departure': '出發',
+  'native.access.toggle': '透過代理伺服器存取',
+  'native.access.hint': '適用於位在 Cloudflare Access 等零信任代理之後的伺服器。App 只會將這些傳送給此伺服器。',
+  'native.access.headerName': '標頭名稱',
+  'native.access.headerValue': '值',
+  'native.access.addHeader': '新增標頭',
+  'native.access.removeHeader': '移除標頭',
+  'native.access.certificate': '用戶端憑證',
+  'native.access.chooseCertificate': '選擇憑證',
+  'native.access.certificatePassword': '憑證密碼',
+  'native.access.removeCertificate': '移除憑證',
+  'native.access.errorName': '標頭 {row} 的名稱無法由 App 傳送。',
+  'native.access.errorValue': '標頭 {row} 需要單行的值。',
+  'native.access.errorDuplicate': '標頭 {row} 已在清單中。',
+  'native.access.errorTooMany': '標頭數量超過 App 可傳送的上限。',
+  'native.access.errorPassword': '此密碼無法開啟這個憑證。',
+  'native.access.errorCertificate': 'App 無法使用此憑證。請選擇 .p12 或 .pfx 檔案。',
+  'native.access.loginHosts': '登入網域',
+  'native.access.loginHostsHint':
+    '代理伺服器登入頁面的網域，例如你的 Cloudflare Access 團隊網域或 Pangolin 位址。它們會在 App 內開啟，因此在那裡登入後，這裡也會保持登入。',
+  'native.access.errorLoginHost': '{host} 不是 App 可以開啟的網域。',
+  'native.access.errorLoginHostsTooMany': '登入網域數量超過 App 可儲存的上限。',
 };
 
 export default native;

@@ -134,6 +134,28 @@ const native: TranslationStrings = {
   'native.widget.votes': 'oy',
   'native.widget.noMessages': 'Henüz mesaj yok',
   'native.widget.departure': 'Hareket',
+  'native.access.toggle': 'Proxy üzerinden erişim',
+  'native.access.hint':
+    'Cloudflare Access gibi bir zero trust proxy arkasındaki sunucu için. Uygulama bunları yalnızca bu sunucuya gönderir.',
+  'native.access.headerName': 'Başlık adı',
+  'native.access.headerValue': 'Değer',
+  'native.access.addHeader': 'Başlık ekle',
+  'native.access.removeHeader': 'Başlığı kaldır',
+  'native.access.certificate': 'İstemci sertifikası',
+  'native.access.chooseCertificate': 'Sertifika seç',
+  'native.access.certificatePassword': 'Sertifika parolası',
+  'native.access.removeCertificate': 'Sertifikayı kaldır',
+  'native.access.errorName': '{row}. başlığın adı uygulamanın gönderemeyeceği bir ad.',
+  'native.access.errorValue': '{row}. başlık tek satırlık bir değer gerektirir.',
+  'native.access.errorDuplicate': '{row}. başlık zaten listede.',
+  'native.access.errorTooMany': 'Bu, uygulamanın gönderebileceğinden fazla başlık.',
+  'native.access.errorPassword': 'Bu parola sertifikayı açmıyor.',
+  'native.access.errorCertificate': 'Uygulama bu sertifikayı kullanamıyor. Bir .p12 veya .pfx dosyası seç.',
+  'native.access.loginHosts': 'Oturum açma alan adları',
+  'native.access.loginHostsHint':
+    'Proxy giriş sayfasının alan adları, örneğin Cloudflare Access ekip alan adınız veya Pangolin adresiniz. Uygulamanın içinde açılırlar, böylece orada oturum açmak sizi burada da oturumda tutar.',
+  'native.access.errorLoginHost': '{host}, uygulamanın açabileceği bir alan adı değil.',
+  'native.access.errorLoginHostsTooMany': 'Bu, uygulamanın saklayabileceğinden fazla oturum açma alan adı.',
 };
 
 export default native;

@@ -10,6 +10,7 @@ import { fakeIapClient, getIapClient, productIdFor, type Purchase } from '../src
 import { CLOUD_TERMS_URL, CLOUD_URL, PRIVACY_URL, SERVER_DOCS_URL, STORE_TERMS_URL } from '../src/native/links';
 import { probeDemo, probeServer, type ProbeFailure, type ProbeGet } from '../src/native/serverAddress';
 import { TrekShell } from '../src/native/trekShell';
+import { accessSection } from './access';
 import { directionOf, pickLocale, translator } from './i18n';
 import './shell.css';
 
@@ -48,11 +49,15 @@ function cloudSuffix(): string {
 }
 
 // Native HTTP rather than fetch: the probe goes to a server of the user's
-// choosing, which has no reason to answer this page's origin with CORS.
-const get: ProbeGet = async (url) => {
-  const response = await CapacitorHttp.get({ url, connectTimeout: PROBE_TIMEOUT_MS, readTimeout: PROBE_TIMEOUT_MS });
-  return { status: response.status, data: response.data, url: response.url };
-};
+// choosing, which has no reason to answer this page's origin with CORS. The
+// app's own stack, so the address the user typed gets the access headers and
+// client certificate set for it (accessGet), and the demo and TREK Cloud get neither.
+const probeWith =
+  (access: boolean): ProbeGet =>
+  (url) =>
+    TrekShell.probe({ url, timeoutMs: PROBE_TIMEOUT_MS, access });
+const get = probeWith(false);
+const accessGet = probeWith(true);
 
 function failureMessage(reason: ProbeFailure): string {
   switch (reason) {
@@ -252,12 +257,16 @@ function showConnect(prefill = '', opts: { back?: boolean } = {}): void {
   const submit = el('button', { type: 'submit', className: 'btn' }, label);
   const error = el('p', { className: 'error', role: 'alert' });
   const form = el('form', { className: 'form', noValidate: true }, field, submit, error);
+  const access = accessSection(t);
 
-  const fail = (reason: ProbeFailure): void => {
+  /** Null: the access section said what is wrong itself. */
+  const fail = (reason: ProbeFailure | null): void => {
     void notify(NotificationType.Error);
-    field.classList.add('bad');
-    setTimeout(() => field.classList.remove('bad'), 350);
-    error.textContent = failureMessage(reason);
+    if (reason) {
+      field.classList.add('bad');
+      setTimeout(() => field.classList.remove('bad'), 350);
+    }
+    error.textContent = reason ? failureMessage(reason) : '';
     input.disabled = false;
     submit.disabled = false;
     label.textContent = t('native.connect.submit');
@@ -271,10 +280,17 @@ function showConnect(prefill = '', opts: { back?: boolean } = {}): void {
     error.textContent = '';
     input.disabled = true;
     submit.disabled = true;
+    const checked = access.collect();
+    if (!checked) {
+      fail(null);
+      return;
+    }
     submit.replaceChildren(el('span', { className: 'spinner' }), t('native.connect.checking'));
-    const result = await probeServer(input.value, get);
+    await TrekShell.setAccessHeaders({ headers: checked.headers });
+    await TrekShell.setLoginHosts({ hosts: checked.loginHosts });
+    const result = await probeServer(input.value, accessGet);
     if (result.ok) {
-      await connected(result.url);
+      await connected(result.url, true);
       return;
     }
     fail(result.reason);
@@ -290,7 +306,7 @@ function showConnect(prefill = '', opts: { back?: boolean } = {}): void {
           el('h1', { className: 'title-sm' }, t('native.connect.title')),
           el('p', { className: 'sub' }, t('native.connect.hint')),
         ],
-        [form, footLinks(externalLink(t('native.connect.whatIsServer'), SERVER_DOCS_URL))]
+        [form, access.element, footLinks(externalLink(t('native.connect.whatIsServer'), SERVER_DOCS_URL))]
       )
     ),
     opts
@@ -465,7 +481,9 @@ function planCard(plan: CloudPlan, interval: 'month' | 'year', offer: Offer): HT
       // No price yet (orders not open): the plan shows without one rather than with an empty one.
       // The price is figures and a currency sign: one left-to-right run, so Arabic
       // keeps "5,99 €" whole, with the period standing apart beside it.
-      ...(label ? [el('span', { className: 'plan-price' }, el('bdi', { dir: 'ltr' }, label), el('small', {}, per))] : [])
+      ...(label
+        ? [el('span', { className: 'plan-price' }, el('bdi', { dir: 'ltr' }, label), el('small', {}, per))]
+        : [])
     ),
     el(
       'div',
@@ -941,8 +959,16 @@ async function runDemo(button: HTMLButtonElement, error?: HTMLElement): Promise<
   }
 }
 
-/** The tick, then the server takes over. A beat so the success registers. */
-async function connected(url: string): Promise<void> {
+/**
+ * The tick, then the server takes over. A beat so the success registers.
+ * Only the address typed on the connect screen keeps the access headers set
+ * there (`keepAccess`); the demo and a TREK Cloud instance get none.
+ */
+async function connected(url: string, keepAccess = false): Promise<void> {
+  if (!keepAccess) {
+    await TrekShell.setAccessHeaders({ headers: [] });
+    await TrekShell.setLoginHosts({ hosts: [] });
+  }
   void notify(NotificationType.Success);
   const host = (() => {
     try {

@@ -134,6 +134,28 @@ const native: TranslationStrings = {
   'native.widget.votes': 'səs',
   'native.widget.noMessages': 'Hələ mesaj yoxdur',
   'native.widget.departure': 'Yola düşmə',
+  'native.access.toggle': 'Proksi vasitəsilə giriş',
+  'native.access.hint':
+    'Cloudflare Access kimi zero trust proksi arxasındakı server üçün. Tətbiq bunları yalnız bu serverə göndərir.',
+  'native.access.headerName': 'Başlığın adı',
+  'native.access.headerValue': 'Dəyər',
+  'native.access.addHeader': 'Başlıq əlavə et',
+  'native.access.removeHeader': 'Başlığı sil',
+  'native.access.certificate': 'Müştəri sertifikatı',
+  'native.access.chooseCertificate': 'Sertifikat seç',
+  'native.access.certificatePassword': 'Sertifikatın şifrəsi',
+  'native.access.removeCertificate': 'Sertifikatı sil',
+  'native.access.errorName': '{row}. başlığın adını tətbiq göndərə bilməz.',
+  'native.access.errorValue': '{row}. başlığa tək sətirdə dəyər lazımdır.',
+  'native.access.errorDuplicate': '{row}. başlıq artıq siyahıdadır.',
+  'native.access.errorTooMany': 'Bu, tətbiqin göndərə biləcəyindən çox başlıqdır.',
+  'native.access.errorPassword': 'Bu şifrə sertifikatı açmır.',
+  'native.access.errorCertificate': 'Tətbiq bu sertifikatdan istifadə edə bilmir. .p12 və ya .pfx faylı seçin.',
+  'native.access.loginHosts': 'Giriş domenləri',
+  'native.access.loginHostsHint':
+    'Proksinin giriş səhifəsinin domenləri, məsələn Cloudflare Access komanda domeniniz və ya Pangolin ünvanınız. Onlar tətbiqin içində açılır, belə ki orada giriş etmək sizi burada da daxil saxlayır.',
+  'native.access.errorLoginHost': '{host} tətbiqin aça biləcəyi domen deyil.',
+  'native.access.errorLoginHostsTooMany': 'Bu, tətbiqin saxlaya biləcəyindən çox giriş domenidir.',
 };
 
 export default native;

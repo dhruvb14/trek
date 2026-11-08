@@ -1,11 +1,13 @@
 package com.liketrek.trek;
 
+import android.webkit.ClientCertRequest;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 import com.getcapacitor.Bridge;
 import com.getcapacitor.BridgeWebViewClient;
+import com.liketrek.trek.access.TrekAccess;
 
 /**
  * Used while the WebView shows the user's server. When that server cannot be
@@ -31,7 +33,16 @@ class TrekWebViewClient extends BridgeWebViewClient {
             WebResourceResponse stored = com.liketrek.trek.tiles.TrekTileStore.INSTANCE.serve(request);
             if (stored != null) return stored;
         }
+        // The server's own GETs, with the access headers a proxy in front of it wants.
+        WebResourceResponse viaApp = TrekAccess.INSTANCE.intercept(view.getContext(), request);
+        if (viaApp != null) return viaApp;
         return super.shouldInterceptRequest(view, request);
+    }
+
+    /** The certificate the user picked, for the server's host only (access/TrekAccess.kt). */
+    @Override
+    public void onReceivedClientCertRequest(WebView view, ClientCertRequest request) {
+        if (!TrekAccess.INSTANCE.answer(view.getContext(), request)) super.onReceivedClientCertRequest(view, request);
     }
 
     @Override
