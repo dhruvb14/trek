@@ -2,9 +2,9 @@ import { Capacitor } from '@capacitor/core';
 import {
   MAX_ACCESS_HEADERS,
   validateAccessHeaders,
+  validateLoginHosts,
   type AccessHeader,
   type AccessHeaderProblem,
-  type AccessHeadersResult,
 } from '../src/native/accessHeaders';
 import { toBase64 } from '../src/native/blobBase64';
 import { TrekShell, type ClientCertificateInfo } from '../src/native/trekShell';
@@ -19,10 +19,16 @@ import { TrekShell, type ClientCertificateInfo } from '../src/native/trekShell';
 
 type Translate = (key: string, params?: Record<string, string>) => string;
 
+/** What the section holds once it checks out. */
+interface AccessSettings {
+  headers: AccessHeader[];
+  loginHosts: string[];
+}
+
 export interface AccessSection {
   element: HTMLElement;
-  /** Checks the rows, marks the first wrong one and says why; the headers when they are fine. */
-  collect(): AccessHeadersResult;
+  /** Checks what was typed, marks the first wrong field and says why; null then, the settings otherwise. */
+  collect(): AccessSettings | null;
 }
 
 export function accessProblemMessage(t: Translate, problem: AccessHeaderProblem, index: number): string {
@@ -99,6 +105,20 @@ export function accessSection(t: Translate): AccessSection {
   };
   add.addEventListener('click', () => addRow().name.focus());
 
+  // The proxy's sign-in domains: pages there stay in the app's WebView.
+  // An example, the same in every language: domains are not translated.
+  const loginHosts = textInput('myteam.cloudflareaccess.com, auth.example.com', '', false);
+  loginHosts.setAttribute('aria-label', t('native.access.loginHosts'));
+  loginHosts.setAttribute('inputmode', 'url');
+  const loginField = node('div', { className: 'field' }, loginHosts);
+  const loginBlock = node(
+    'div',
+    { className: 'access-login' },
+    node('span', { className: 'access-label' }, t('native.access.loginHosts')),
+    node('p', { className: 'sub' }, t('native.access.loginHostsHint')),
+    loginField
+  );
+
   const certificate = certificateBlock(t, error);
   const details = node(
     'details',
@@ -110,6 +130,7 @@ export function accessSection(t: Translate): AccessSection {
       node('p', { className: 'sub' }, t('native.access.hint')),
       list,
       add,
+      loginBlock,
       certificate.element,
       error
     )
@@ -117,10 +138,11 @@ export function accessSection(t: Translate): AccessSection {
 
   // What the app holds already, so changing the server keeps it in view.
   TrekShell.getAccess().then(
-    ({ headers, certificate: cert }) => {
+    ({ headers, certificate: cert, loginHosts: hosts = [] }) => {
       for (const header of headers) addRow(header);
+      loginHosts.value = hosts.join(', ');
       certificate.show(cert);
-      if (headers.length || cert) details.open = true;
+      if (headers.length || cert || hosts.length) details.open = true;
     },
     () => certificate.show(null)
   );
@@ -129,14 +151,26 @@ export function accessSection(t: Translate): AccessSection {
     element: details,
     collect() {
       for (const row of rows) row.element.classList.remove('bad');
+      loginField.classList.remove('bad');
       error.textContent = '';
       const result = validateAccessHeaders(rows.map((row) => ({ name: row.name.value, value: row.value.value })));
       if ('problem' in result) {
         details.open = true;
         rows[result.index]?.element.classList.add('bad');
         error.textContent = accessProblemMessage(t, result.problem, result.index);
+        return null;
       }
-      return result;
+      const hosts = validateLoginHosts(loginHosts.value);
+      if ('problem' in hosts) {
+        details.open = true;
+        loginField.classList.add('bad');
+        error.textContent =
+          hosts.problem === 'host'
+            ? t('native.access.errorLoginHost', { host: hosts.entry })
+            : t('native.access.errorLoginHostsTooMany');
+        return null;
+      }
+      return { headers: result.headers, loginHosts: hosts.hosts };
     },
   };
 }

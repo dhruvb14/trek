@@ -145,6 +145,11 @@ const native: TranslationStrings = {
   'native.access.errorTooMany': '標頭數量超過 App 可傳送的上限。',
   'native.access.errorPassword': '此密碼無法開啟這個憑證。',
   'native.access.errorCertificate': 'App 無法使用此憑證。請選擇 .p12 或 .pfx 檔案。',
+  'native.access.loginHosts': '登入網域',
+  'native.access.loginHostsHint':
+    '代理伺服器登入頁面的網域，例如你的 Cloudflare Access 團隊網域或 Pangolin 位址。它們會在 App 內開啟，因此在那裡登入後，這裡也會保持登入。',
+  'native.access.errorLoginHost': '{host} 不是 App 可以開啟的網域。',
+  'native.access.errorLoginHostsTooMany': '登入網域數量超過 App 可儲存的上限。',
 };
 
 export default native;

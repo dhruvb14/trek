@@ -146,6 +146,11 @@ const native: TranslationStrings = {
   'native.access.errorTooMany': 'هذه ترويسات أكثر مما يستطيع التطبيق إرساله.',
   'native.access.errorPassword': 'كلمة المرور لا تفتح هذه الشهادة.',
   'native.access.errorCertificate': 'لا يستطيع التطبيق استخدام هذه الشهادة. اختر ملف ‎.p12 أو ‎.pfx.',
+  'native.access.loginHosts': 'نطاقات تسجيل الدخول',
+  'native.access.loginHostsHint':
+    'نطاقات صفحة تسجيل الدخول الخاصة بالوكيل، مثل نطاق فريقك في Cloudflare Access أو عنوان Pangolin. تُفتح داخل التطبيق، فيبقى تسجيل الدخول هناك ساريًا هنا.',
+  'native.access.errorLoginHost': '{host} ليس نطاقًا يستطيع التطبيق فتحه.',
+  'native.access.errorLoginHostsTooMany': 'هذه نطاقات تسجيل دخول أكثر مما يستطيع التطبيق حفظه.',
 };
 
 export default native;

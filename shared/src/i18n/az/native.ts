@@ -151,6 +151,11 @@ const native: TranslationStrings = {
   'native.access.errorTooMany': 'Bu, tətbiqin göndərə biləcəyindən çox başlıqdır.',
   'native.access.errorPassword': 'Bu şifrə sertifikatı açmır.',
   'native.access.errorCertificate': 'Tətbiq bu sertifikatdan istifadə edə bilmir. .p12 və ya .pfx faylı seçin.',
+  'native.access.loginHosts': 'Giriş domenləri',
+  'native.access.loginHostsHint':
+    'Proksinin giriş səhifəsinin domenləri, məsələn Cloudflare Access komanda domeniniz və ya Pangolin ünvanınız. Onlar tətbiqin içində açılır, belə ki orada giriş etmək sizi burada da daxil saxlayır.',
+  'native.access.errorLoginHost': '{host} tətbiqin aça biləcəyi domen deyil.',
+  'native.access.errorLoginHostsTooMany': 'Bu, tətbiqin saxlaya biləcəyindən çox giriş domenidir.',
 };
 
 export default native;

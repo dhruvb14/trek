@@ -147,6 +147,11 @@ const native: TranslationStrings = {
   'native.access.errorTooMany': 'จำนวนเฮดเดอร์มากกว่าที่แอปส่งได้',
   'native.access.errorPassword': 'รหัสผ่านนี้เปิดใบรับรองไม่ได้',
   'native.access.errorCertificate': 'แอปใช้ใบรับรองนี้ไม่ได้ โปรดเลือกไฟล์ .p12 หรือ .pfx',
+  'native.access.loginHosts': 'โดเมนสำหรับลงชื่อเข้าใช้',
+  'native.access.loginHostsHint':
+    'โดเมนของหน้าลงชื่อเข้าใช้ของพร็อกซี เช่น โดเมนทีม Cloudflare Access หรือที่อยู่ Pangolin ของคุณ หน้าเหล่านี้จะเปิดในแอป การลงชื่อเข้าใช้ที่นั่นจึงมีผลที่นี่ด้วย',
+  'native.access.errorLoginHost': '{host} ไม่ใช่โดเมนที่แอปเปิดได้',
+  'native.access.errorLoginHostsTooMany': 'จำนวนโดเมนสำหรับลงชื่อเข้าใช้มากกว่าที่แอปเก็บได้',
 };
 
 export default native;

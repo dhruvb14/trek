@@ -45,6 +45,13 @@ class TrekBridgeViewController: CAPBridgeViewController {
             navigationProxy = proxy
             webView.navigationDelegate = proxy
         }
+        // With the proxy's sign-in domains allowed in the WebView, only the
+        // server's pages may talk to the app's plugins (TrekAccess.swift).
+        if !TrekAccess.loginHosts.isEmpty, let capacitor = bridge as? CapacitorBridge {
+            let handler = capacitor.webViewDelegationHandler
+            handler.contentController.removeScriptMessageHandler(forName: "bridge")
+            handler.contentController.add(TrekBridgeOriginGate(inner: handler, local: capacitor.config.localURL), name: "bridge")
+        }
         bridge?.registerPluginInstance(TrekShellPlugin())
         // WebKit's own swipe back slides away a screenshot of the whole page,
         // closes no sheet and takes every drag near the edge from the UI. The UI

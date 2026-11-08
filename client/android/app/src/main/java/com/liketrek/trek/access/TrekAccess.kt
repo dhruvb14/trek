@@ -53,7 +53,9 @@ import org.json.JSONObject
  * - the UI's other fetch and XMLHttpRequest calls: [installScript]
  *   (client/native-shell/static/access-headers.js);
  * - the WebView's certificate requests: [answer];
- * - the address screen's probe: [probe].
+ * - the address screen's probe: [probe];
+ * - the proxy's own login page, kept in the WebView when its domain is one
+ *   of the sign-in domains: [isLoginPage].
  *
  * The WebSocket gets neither header nor interception: it depends on the
  * session cookie the proxy sets on the first authenticated load.
@@ -73,6 +75,9 @@ object TrekAccess {
     private const val PREFS = "trek_access"
     private const val KEY_HEADERS = "headers"
     private const val KEY_ALIAS = "certificate_alias"
+    private const val KEY_LOGIN_HOSTS = "login_hosts"
+    const val MAX_LOGIN_HOSTS = 8
+    private val LABEL = Regex("^(?!-)[a-z0-9-]{1,63}(?<!-)$")
     private const val KEYSTORE_ALIAS = "trek-access-headers"
     private const val TIMEOUT_MS = 30_000
     private const val MAX_REDIRECTS = 5
@@ -140,6 +145,22 @@ object TrekAccess {
         val present = out.keys.map { it.lowercase(Locale.ROOT) }.toSet()
         headers.forEach { if (it.name.lowercase(Locale.ROOT) !in present) out[it.name] = it.value }
         return out
+    }
+
+    /** A host, or `*.` and a domain of two labels or more (client/src/native/accessHeaders.ts, normalizeLoginHost). */
+    fun isValidLoginHost(entry: String): Boolean {
+        val wildcard = entry.startsWith("*.")
+        val host = if (wildcard) entry.substring(2) else entry
+        val labels = host.split(".")
+        return host.length <= 253 && labels.size >= (if (wildcard) 2 else 1) && labels.all { LABEL.matches(it) }
+    }
+
+    /** The host itself, or a subdomain of a `*.` entry; never a look-alike such as evilexample.com. */
+    fun matchesLoginHost(host: String, entries: List<String>): Boolean {
+        val lower = host.lowercase(Locale.ROOT)
+        return entries.any { entry ->
+            if (entry.startsWith("*.")) lower.endsWith(entry.substring(1)) && lower.length > entry.length - 1 else lower == entry
+        }
     }
 
     fun headersToJson(headers: List<Header>): JSONArray =
@@ -212,6 +233,39 @@ object TrekAccess {
         cipher.init(Cipher.DECRYPT_MODE, secretKey(), GCMParameterSpec(128, Base64.decode(parts[0], Base64.NO_WRAP)))
         cipher.doFinal(Base64.decode(parts[1], Base64.NO_WRAP))
     }.getOrNull()
+
+    /**
+     * The proxy's sign-in domains: a page on one of them stays in the WebView
+     * ([isLoginPage], TrekShellPlugin.shouldOverrideLoad), so the proxy's login
+     * sets its cookie where the UI runs instead of in the browser. Capacitor
+     * gives no page outside the server's origin its bridge, so that page cannot
+     * reach the plugins. Not secret, so stored as they are.
+     */
+    fun loginHosts(context: Context): List<String> {
+        val stored = prefs(context).getString(KEY_LOGIN_HOSTS, null) ?: return emptyList()
+        return runCatching {
+            val array = JSONArray(stored)
+            (0 until array.length()).map { array.optString(it) }.filter(::isValidLoginHost)
+        }.getOrDefault(emptyList())
+    }
+
+    /** Replaces the domains; false when one is not valid or there are too many. */
+    fun setLoginHosts(context: Context, hosts: List<String>): Boolean {
+        val lowered = hosts.map { it.lowercase(Locale.ROOT) }
+        if (lowered.size > MAX_LOGIN_HOSTS || !lowered.all(::isValidLoginHost)) return false
+        val editor = prefs(context).edit()
+        if (lowered.isEmpty()) editor.remove(KEY_LOGIN_HOSTS) else editor.putString(KEY_LOGIN_HOSTS, JSONArray(lowered).toString())
+        return editor.commit()
+    }
+
+    /** Whether an http(s) URL is on one of the sign-in domains. */
+    fun isLoginPage(context: Context, url: String): Boolean {
+        val uri = runCatching { URI(url) }.getOrNull() ?: return false
+        val scheme = uri.scheme?.lowercase(Locale.ROOT)
+        if (scheme != "https" && scheme != "http") return false
+        val host = uri.host ?: return false
+        return matchesLoginHost(host, loginHosts(context))
+    }
 
     /** The KeyChain alias the user picked; the key itself stays in the system's store. */
     fun alias(context: Context): String? = prefs(context).getString(KEY_ALIAS, null)

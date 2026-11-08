@@ -150,6 +150,11 @@ const native: TranslationStrings = {
   'native.access.errorTooMany': 'That is more headers than the app can send.',
   'native.access.errorPassword': 'The password does not open this certificate.',
   'native.access.errorCertificate': 'The app cannot use this certificate. Choose a .p12 or .pfx file.',
+  'native.access.loginHosts': 'Sign-in domains',
+  'native.access.loginHostsHint':
+    "The domains of the proxy's login page, such as your Cloudflare Access team domain or your Pangolin address. They open inside the app, so signing in there keeps you signed in here.",
+  'native.access.errorLoginHost': '{host} is not a domain the app can open.',
+  'native.access.errorLoginHostsTooMany': 'That is more sign-in domains than the app can keep.',
 };
 
 export default native;

@@ -15,7 +15,10 @@ import WebKit
 /// - the WebView's client-certificate challenges, subresources and /ws
 ///   included: TrekShellPlugin.handleWKWebViewURLAuthenticationChallenge;
 /// - the app's own requests (offline copy, watch, the address screen's probe):
-///   TrekAccessSession.
+///   TrekAccessSession;
+/// - the proxy's own login page, which stays in the WebView when its domain is
+///   one of `loginHosts` (TrekShellPlugin.shouldOverrideLoad), behind
+///   TrekBridgeOriginGate so that page cannot reach the app's plugins.
 ///
 /// A WKWebView cannot add a header to an image, a script or the WebSocket, so
 /// those depend on the session cookie the proxy sets on the first
@@ -195,6 +198,51 @@ enum TrekAccess {
         return WKUserScript(source: script, injectionTime: .atDocumentStart, forMainFrameOnly: true)
     }
 
+    // MARK: - Sign-in domains
+
+    /// The proxy's sign-in domains (client/src/native/accessHeaders.ts,
+    /// validateLoginHosts): a page on one of them stays in the WebView, so the
+    /// proxy's login sets its cookie where the UI runs instead of in Safari.
+    /// Not secret, so they live in the app's defaults.
+    static let maxLoginHosts = 8
+    private static let loginHostsKey = "TrekAccessLoginHosts"
+
+    static var loginHosts: [String] {
+        (UserDefaults.standard.stringArray(forKey: loginHostsKey) ?? []).filter(isValidLoginHost)
+    }
+
+    /// Replaces the domains; false when one is not a host or `*.` and a domain of two labels or more.
+    static func setLoginHosts(_ hosts: [String]) -> Bool {
+        let lowered = hosts.map { $0.lowercased() }
+        guard lowered.count <= maxLoginHosts, lowered.allSatisfy(isValidLoginHost) else { return false }
+        if lowered.isEmpty {
+            UserDefaults.standard.removeObject(forKey: loginHostsKey)
+        } else {
+            UserDefaults.standard.set(lowered, forKey: loginHostsKey)
+        }
+        return true
+    }
+
+    static func isValidLoginHost(_ entry: String) -> Bool {
+        let wildcard = entry.hasPrefix("*.")
+        let host = wildcard ? String(entry.dropFirst(2)) : entry
+        let labels = host.split(separator: ".", omittingEmptySubsequences: false)
+        guard host.count <= 253, labels.count >= (wildcard ? 2 : 1) else { return false }
+        return labels.allSatisfy { label in
+            (1...63).contains(label.count) && label.first != "-" && label.last != "-"
+                && label.unicodeScalars.allSatisfy { ("a"..."z").contains($0) || ("0"..."9").contains($0) || $0 == "-" }
+        }
+    }
+
+    /// Whether an http(s) URL is on a sign-in domain: the host itself, or a subdomain of a `*.` entry.
+    static func isLoginHost(_ url: URL?) -> Bool {
+        guard let url, let scheme = url.scheme?.lowercased(), scheme == "https" || scheme == "http",
+              let host = url.host?.lowercased() else { return false }
+        return loginHosts.contains { entry in
+            entry.hasPrefix("*.") ? host.hasSuffix(String(entry.dropFirst(1))) && host.count > entry.count - 1 : host == entry
+        }
+    }
+
     // MARK: - Client certificate
 
     enum ImportError: Error {
@@ -338,5 +386,34 @@ final class TrekAccessSession: NSObject, URLSessionTaskDelegate {
             return completionHandler(stripped)
         }
         completionHandler(prepare(request))
+    }
+}
+
+/// Stands in front of Capacitor's "bridge" message handler while sign-in
+/// domains are set, and passes on only what the server's own pages (and the
+/// bundled address screen) send. Capacitor's iOS bridge takes a message from
+/// any page the WebView shows, and a proxy's login page now shows there.
+final class TrekBridgeOriginGate: NSObject, WKScriptMessageHandler {
+    private weak var inner: WKScriptMessageHandler?
+    private let local: URL
+
+    init(inner: WKScriptMessageHandler, local: URL) {
+        self.inner = inner
+        self.local = local
+    }
+
+    static func allows(_ origin: WKSecurityOrigin, server: URL?, local: URL) -> Bool {
+        let scheme = origin.protocol.lowercased()
+        let host = origin.host.lowercased()
+        if scheme == local.scheme?.lowercased(), host == local.host?.lowercased() { return true }
+        guard let server, scheme == server.scheme?.lowercased(), host == server.host?.lowercased() else { return false }
+        // WebKit reports 0 for the scheme's default port.
+        let port = origin.port == 0 ? (scheme == "http" ? 80 : 443) : origin.port
+        return port == TrekAccess.port(server)
+    }
+
+    func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
+        guard Self.allows(message.frameInfo.securityOrigin, server: TrekAccess.serverURL, local: local) else { return }
+        inner?.userContentController(userContentController, didReceive: message)
     }
 }

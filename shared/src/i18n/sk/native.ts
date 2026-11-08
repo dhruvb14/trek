@@ -149,6 +149,11 @@ const native: TranslationStrings = {
   'native.access.errorTooMany': 'To je viac hlavičiek, než aplikácia dokáže odoslať.',
   'native.access.errorPassword': 'Toto heslo certifikát neotvorí.',
   'native.access.errorCertificate': 'Aplikácia tento certifikát nemôže použiť. Vyberte súbor .p12 alebo .pfx.',
+  'native.access.loginHosts': 'Prihlasovacie domény',
+  'native.access.loginHostsHint':
+    'Domény prihlasovacej stránky proxy, napríklad tímová doména Cloudflare Access alebo adresa Pangolinu. Otvárajú sa v aplikácii, takže prihlásenie tam platí aj tu.',
+  'native.access.errorLoginHost': '{host} nie je doména, ktorú aplikácia dokáže otvoriť.',
+  'native.access.errorLoginHostsTooMany': 'To je viac prihlasovacích domén, než aplikácia uloží.',
 };
 
 export default native;

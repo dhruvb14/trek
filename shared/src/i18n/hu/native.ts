@@ -152,6 +152,11 @@ const native: TranslationStrings = {
   'native.access.errorTooMany': 'Ez több fejléc, mint amennyit az app el tud küldeni.',
   'native.access.errorPassword': 'Ez a jelszó nem nyitja meg a tanúsítványt.',
   'native.access.errorCertificate': 'Az app nem tudja használni ezt a tanúsítványt. Válassz .p12 vagy .pfx fájlt.',
+  'native.access.loginHosts': 'Bejelentkezési domainek',
+  'native.access.loginHostsHint':
+    'A proxy bejelentkezési oldalának domainjei, például a Cloudflare Access csapatdomain vagy a Pangolin címe. Az appon belül nyílnak meg, így az ottani bejelentkezés itt is érvényes.',
+  'native.access.errorLoginHost': '{host} nem olyan domain, amelyet az app meg tud nyitni.',
+  'native.access.errorLoginHostsTooMany': 'Ez több bejelentkezési domain, mint amennyit az app meg tud tartani.',
 };
 
 export default native;

@@ -150,6 +150,11 @@ const native: TranslationStrings = {
   'native.access.errorTooMany': 'Det är fler rubriker än appen kan skicka.',
   'native.access.errorPassword': 'Lösenordet öppnar inte det här certifikatet.',
   'native.access.errorCertificate': 'Appen kan inte använda det här certifikatet. Välj en .p12- eller .pfx-fil.',
+  'native.access.loginHosts': 'Inloggningsdomäner',
+  'native.access.loginHostsHint':
+    'Domänerna för proxyns inloggningssida, till exempel din Cloudflare Access-teamdomän eller din Pangolin-adress. De öppnas i appen, så att en inloggning där håller dig inloggad här.',
+  'native.access.errorLoginHost': '{host} är ingen domän som appen kan öppna.',
+  'native.access.errorLoginHostsTooMany': 'Det är fler inloggningsdomäner än appen kan spara.',
 };
 
 export default native;

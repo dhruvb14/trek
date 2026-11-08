@@ -1292,7 +1292,8 @@ a.linkbtn {
   min-width: 0;
 }
 .access-row .field input,
-.access-cert .field input {
+.access-cert .field input,
+.access-login .field input {
   padding: 10px 14px;
   font-size: 0.9rem;
 }
@@ -1314,7 +1315,8 @@ a.linkbtn {
 .access-remove:active {
   color: var(--ink);
 }
-.access-cert {
+.access-cert,
+.access-login {
   display: flex;
   flex-direction: column;
   gap: 8px;

@@ -152,6 +152,11 @@ const native: TranslationStrings = {
   'native.access.errorTooMany': 'Sono più header di quanti l’app possa inviarne.',
   'native.access.errorPassword': 'La password non apre questo certificato.',
   'native.access.errorCertificate': 'L’app non può usare questo certificato. Scegli un file .p12 o .pfx.',
+  'native.access.loginHosts': 'Domini di accesso',
+  'native.access.loginHostsHint':
+    'I domini della pagina di accesso del proxy, come il dominio del team Cloudflare Access o l’indirizzo di Pangolin. Si aprono nell’app, così l’accesso fatto lì vale anche qui.',
+  'native.access.errorLoginHost': '{host} non è un dominio che l’app può aprire.',
+  'native.access.errorLoginHostsTooMany': 'Sono più domini di accesso di quanti l’app possa salvarne.',
 };
 
 export default native;

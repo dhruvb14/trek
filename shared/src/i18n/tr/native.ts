@@ -151,6 +151,11 @@ const native: TranslationStrings = {
   'native.access.errorTooMany': 'Bu, uygulamanın gönderebileceğinden fazla başlık.',
   'native.access.errorPassword': 'Bu parola sertifikayı açmıyor.',
   'native.access.errorCertificate': 'Uygulama bu sertifikayı kullanamıyor. Bir .p12 veya .pfx dosyası seç.',
+  'native.access.loginHosts': 'Oturum açma alan adları',
+  'native.access.loginHostsHint':
+    'Proxy giriş sayfasının alan adları, örneğin Cloudflare Access ekip alan adınız veya Pangolin adresiniz. Uygulamanın içinde açılırlar, böylece orada oturum açmak sizi burada da oturumda tutar.',
+  'native.access.errorLoginHost': '{host}, uygulamanın açabileceği bir alan adı değil.',
+  'native.access.errorLoginHostsTooMany': 'Bu, uygulamanın saklayabileceğinden fazla oturum açma alan adı.',
 };
 
 export default native;

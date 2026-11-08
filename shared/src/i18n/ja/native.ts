@@ -151,6 +151,11 @@ const native: TranslationStrings = {
   'native.access.errorTooMany': 'アプリが送信できる数を超えるヘッダーです。',
   'native.access.errorPassword': 'このパスワードでは証明書を開けません。',
   'native.access.errorCertificate': 'この証明書はアプリで使用できません。.p12 または .pfx ファイルを選んでください。',
+  'native.access.loginHosts': 'サインインドメイン',
+  'native.access.loginHostsHint':
+    'Cloudflare Access のチームドメインや Pangolin のアドレスなど、プロキシのログインページのドメインです。アプリ内で開くため、そこでのサインインがこちらでも有効になります。',
+  'native.access.errorLoginHost': '{host} はアプリで開けるドメインではありません。',
+  'native.access.errorLoginHostsTooMany': 'アプリが保存できる数を超えるサインインドメインです。',
 };
 
 export default native;

@@ -150,6 +150,11 @@ const native: TranslationStrings = {
   'native.access.errorTooMany': 'Dat zijn meer headers dan de app kan versturen.',
   'native.access.errorPassword': 'Dit wachtwoord opent het certificaat niet.',
   'native.access.errorCertificate': 'De app kan dit certificaat niet gebruiken. Kies een .p12- of .pfx-bestand.',
+  'native.access.loginHosts': 'Aanmelddomeinen',
+  'native.access.loginHostsHint':
+    'De domeinen van de inlogpagina van de proxy, zoals je Cloudflare Access-teamdomein of je Pangolin-adres. Ze openen in de app, zodat inloggen daar je hier ingelogd houdt.',
+  'native.access.errorLoginHost': '{host} is geen domein dat de app kan openen.',
+  'native.access.errorLoginHostsTooMany': 'Dat zijn meer aanmelddomeinen dan de app kan bewaren.',
 };
 
 export default native;

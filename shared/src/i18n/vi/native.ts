@@ -152,6 +152,11 @@ const native: TranslationStrings = {
   'native.access.errorTooMany': 'Số header nhiều hơn mức ứng dụng có thể gửi.',
   'native.access.errorPassword': 'Mật khẩu không mở được chứng chỉ này.',
   'native.access.errorCertificate': 'Ứng dụng không dùng được chứng chỉ này. Hãy chọn tệp .p12 hoặc .pfx.',
+  'native.access.loginHosts': 'Tên miền đăng nhập',
+  'native.access.loginHostsHint':
+    'Các tên miền của trang đăng nhập proxy, như tên miền nhóm Cloudflare Access hoặc địa chỉ Pangolin của bạn. Chúng mở ngay trong ứng dụng, nên đăng nhập ở đó giữ bạn đăng nhập ở đây.',
+  'native.access.errorLoginHost': '{host} không phải tên miền ứng dụng có thể mở.',
+  'native.access.errorLoginHostsTooMany': 'Số tên miền đăng nhập nhiều hơn mức ứng dụng có thể lưu.',
 };
 
 export default native;

@@ -98,3 +98,49 @@ export function parseAccessHeaders(raw: unknown): AccessHeader[] {
     return typeof name === 'string' && typeof value === 'string' ? [{ name, value }] : [];
   });
 }
+
+/**
+ * The sign-in domains of the proxy (a Cloudflare Access team domain such as
+ * `myteam.cloudflareaccess.com`, the Pangolin dashboard's host, …). The app
+ * keeps a page on one of them in its WebView instead of handing it to the
+ * system browser, so the proxy's login sets its cookie where TREK runs. An
+ * entry is a host, or `*.` and a domain of at least two labels for every
+ * subdomain of it. The binaries check the same rules again.
+ */
+export const MAX_LOGIN_HOSTS = 8;
+const LABEL = /^(?!-)[a-z0-9-]{1,63}(?<!-)$/;
+
+/** What was typed, as a lowercase host or wildcard; null when it is not one. */
+export function normalizeLoginHost(raw: string): string | null {
+  let text = raw.trim().toLowerCase();
+  if (!text) return null;
+  if (text.includes('://')) {
+    try {
+      text = new URL(text).hostname;
+    } catch {
+      return null;
+    }
+  }
+  text = text.replace(/\.$/, '');
+  const wildcard = text.startsWith('*.');
+  const labels = (wildcard ? text.slice(2) : text).split('.');
+  if (text.length > 253 || labels.length < (wildcard ? 2 : 1)) return null;
+  if (!labels.every((label) => LABEL.test(label))) return null;
+  return text;
+}
+
+export type LoginHostsResult =
+  { ok: true; hosts: string[] } | { ok: false; problem: 'host' | 'tooMany'; entry: string };
+
+/** Splits what was typed (commas, spaces or new lines between entries) and checks each entry. */
+export function validateLoginHosts(input: string): LoginHostsResult {
+  const hosts: string[] = [];
+  for (const entry of input.split(/[\s,]+/).filter(Boolean)) {
+    const host = normalizeLoginHost(entry);
+    if (!host) return { ok: false, problem: 'host', entry };
+    if (hosts.includes(host)) continue;
+    if (hosts.length === MAX_LOGIN_HOSTS) return { ok: false, problem: 'tooMany', entry };
+    hosts.push(host);
+  }
+  return { ok: true, hosts };
+}

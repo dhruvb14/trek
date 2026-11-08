@@ -145,6 +145,11 @@ const native: TranslationStrings = {
   'native.access.errorTooMany': '请求头数量超出应用可发送的上限。',
   'native.access.errorPassword': '此密码无法打开该证书。',
   'native.access.errorCertificate': '应用无法使用此证书。请选择 .p12 或 .pfx 文件。',
+  'native.access.loginHosts': '登录域名',
+  'native.access.loginHostsHint':
+    '代理登录页面的域名，例如你的 Cloudflare Access 团队域名或 Pangolin 地址。它们会在应用内打开，因此在那里登录后，这里也会保持登录。',
+  'native.access.errorLoginHost': '{host} 不是应用可以打开的域名。',
+  'native.access.errorLoginHostsTooMany': '登录域名数量超出应用可保存的上限。',
 };
 
 export default native;

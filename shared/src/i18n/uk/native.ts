@@ -150,6 +150,11 @@ const native: TranslationStrings = {
   'native.access.errorTooMany': 'Це більше заголовків, ніж застосунок може надіслати.',
   'native.access.errorPassword': 'Цей пароль не відкриває сертифікат.',
   'native.access.errorCertificate': 'Застосунок не може використати цей сертифікат. Виберіть файл .p12 або .pfx.',
+  'native.access.loginHosts': 'Домени входу',
+  'native.access.loginHostsHint':
+    'Домени сторінки входу проксі, наприклад домен команди Cloudflare Access або адреса Pangolin. Вони відкриваються в застосунку, тож вхід там діє й тут.',
+  'native.access.errorLoginHost': '{host} не є доменом, який застосунок може відкрити.',
+  'native.access.errorLoginHostsTooMany': 'Це більше доменів входу, ніж застосунок може зберегти.',
 };
 
 export default native;

@@ -151,6 +151,11 @@ const native: TranslationStrings = {
   'native.access.errorTooMany': 'Это больше заголовков, чем приложение может отправить.',
   'native.access.errorPassword': 'Этот пароль не открывает сертификат.',
   'native.access.errorCertificate': 'Приложение не может использовать этот сертификат. Выберите файл .p12 или .pfx.',
+  'native.access.loginHosts': 'Домены входа',
+  'native.access.loginHostsHint':
+    'Домены страницы входа прокси, например домен команды Cloudflare Access или адрес Pangolin. Они открываются внутри приложения, поэтому вход там сохраняется и здесь.',
+  'native.access.errorLoginHost': '{host} не домен, который приложение может открыть.',
+  'native.access.errorLoginHostsTooMany': 'Это больше доменов входа, чем приложение может сохранить.',
 };
 
 export default native;

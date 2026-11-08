@@ -34,7 +34,14 @@ export interface TrekShellPlugin {
    * (feature clientCertificate). Header values are secrets the binary keeps in
    * the Keychain / an AndroidKeyStore-encrypted store.
    */
-  getAccess(): Promise<{ headers: AccessHeader[]; certificate: ClientCertificateInfo | null }>;
+  getAccess(): Promise<{ headers: AccessHeader[]; certificate: ClientCertificateInfo | null; loginHosts?: string[] }>;
+  /**
+   * Feature proxyLogin: the proxy's sign-in domains (native/accessHeaders.ts,
+   * validateLoginHosts). A page on one of them stays in the WebView instead of
+   * opening in the system browser, so the proxy's login sets its cookie where
+   * the UI runs. Takes effect from the next load of the server.
+   */
+  setLoginHosts(options: { hosts: string[] }): Promise<void>;
   /** Feature accessHeaders: replaces the headers. They reach the WebView from the next load of the server. */
   setAccessHeaders(options: { headers: AccessHeader[] }): Promise<void>;
   /** iOS, feature clientCertificate: imports a PKCS#12 (base64). Rejects with WRONG_PASSWORD or INVALID. */

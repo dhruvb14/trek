@@ -150,6 +150,11 @@ const native: TranslationStrings = {
   'native.access.errorTooMany': 'To więcej nagłówków, niż aplikacja może wysłać.',
   'native.access.errorPassword': 'To hasło nie otwiera tego certyfikatu.',
   'native.access.errorCertificate': 'Aplikacja nie może użyć tego certyfikatu. Wybierz plik .p12 lub .pfx.',
+  'native.access.loginHosts': 'Domeny logowania',
+  'native.access.loginHostsHint':
+    'Domeny strony logowania proxy, np. domena zespołu Cloudflare Access lub adres Pangolin. Otwierają się w aplikacji, więc logowanie tam działa też tutaj.',
+  'native.access.errorLoginHost': '{host} to nie domena, którą aplikacja może otworzyć.',
+  'native.access.errorLoginHostsTooMany': 'To więcej domen logowania, niż aplikacja może zapisać.',
 };
 
 export default native;

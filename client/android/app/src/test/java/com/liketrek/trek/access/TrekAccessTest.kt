@@ -62,4 +62,27 @@ class TrekAccessTest {
         assertEquals(listOf(Header("X-B", "2")), TrekAccess.headersFromJson("""[{"name":"Bad Name","value":"1"},{"name":"X-B","value":"2"}]"""))
         assertEquals(emptyList<Header>(), TrekAccess.headersFromJson("not json"))
     }
+
+    @Test
+    fun signInDomainsAreHostsOrWildcardsOverADomain() {
+        assertTrue(TrekAccess.isValidLoginHost("myteam.cloudflareaccess.com"))
+        assertTrue(TrekAccess.isValidLoginHost("*.example.com"))
+        assertTrue(TrekAccess.isValidLoginHost("pangolin"))
+        assertFalse(TrekAccess.isValidLoginHost("*.com"))
+        assertFalse(TrekAccess.isValidLoginHost("-bad.example.com"))
+        assertFalse(TrekAccess.isValidLoginHost("ex_ample.com"))
+        assertFalse(TrekAccess.isValidLoginHost("Upper.example.com"))
+        assertFalse(TrekAccess.isValidLoginHost(""))
+    }
+
+    @Test
+    fun aSignInDomainMatchesItselfAndTheSubdomainsOfAWildcard() {
+        val entries = listOf("myteam.cloudflareaccess.com", "*.example.com")
+        assertTrue(TrekAccess.matchesLoginHost("MyTeam.cloudflareaccess.com", entries))
+        assertTrue(TrekAccess.matchesLoginHost("auth.example.com", entries))
+        assertTrue(TrekAccess.matchesLoginHost("a.b.example.com", entries))
+        assertFalse(TrekAccess.matchesLoginHost("example.com", entries))
+        assertFalse(TrekAccess.matchesLoginHost("evilexample.com", entries))
+        assertFalse(TrekAccess.matchesLoginHost("other.cloudflareaccess.com", entries))
+    }
 }

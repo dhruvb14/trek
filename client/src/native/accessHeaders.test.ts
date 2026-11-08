@@ -2,9 +2,12 @@ import { describe, expect, it } from 'vitest';
 import {
   MAX_ACCESS_HEADERS,
   MAX_ACCESS_HEADER_VALUE,
+  MAX_LOGIN_HOSTS,
   isReservedHeader,
+  normalizeLoginHost,
   parseAccessHeaders,
   validateAccessHeaders,
+  validateLoginHosts,
 } from './accessHeaders';
 
 describe('validateAccessHeaders', () => {
@@ -92,5 +95,40 @@ describe('parseAccessHeaders', () => {
       { name: 'B', value: '' },
     ]);
     expect(parseAccessHeaders(undefined)).toEqual([]);
+  });
+});
+
+describe('login hosts', () => {
+  it('normalizes a host, a URL and a wildcard', () => {
+    expect(normalizeLoginHost(' MyTeam.CloudflareAccess.com ')).toBe('myteam.cloudflareaccess.com');
+    expect(normalizeLoginHost('https://auth.example.com/login?x=1')).toBe('auth.example.com');
+    expect(normalizeLoginHost('*.example.com')).toBe('*.example.com');
+    expect(normalizeLoginHost('pangolin.local.')).toBe('pangolin.local');
+  });
+
+  it('refuses what is not a host, and a wildcard over a whole top-level domain', () => {
+    for (const bad of [
+      '',
+      'exa mple.com',
+      '-bad.example.com',
+      '*.com',
+      '*',
+      'ex_ample.com',
+      'http://',
+      'a'.repeat(64) + '.com',
+    ]) {
+      expect([bad, normalizeLoginHost(bad)]).toEqual([bad, null]);
+    }
+  });
+
+  it('splits on commas, spaces and lines, drops repeats and says which entry is wrong', () => {
+    expect(validateLoginHosts('a.example.com, b.example.com\nA.example.com')).toEqual({
+      ok: true,
+      hosts: ['a.example.com', 'b.example.com'],
+    });
+    expect(validateLoginHosts('')).toEqual({ ok: true, hosts: [] });
+    expect(validateLoginHosts('ok.example.com bad_host')).toEqual({ ok: false, problem: 'host', entry: 'bad_host' });
+    const many = Array.from({ length: MAX_LOGIN_HOSTS + 1 }, (_, i) => `h${i}.example.com`).join(' ');
+    expect(validateLoginHosts(many)).toMatchObject({ ok: false, problem: 'tooMany' });
   });
 });

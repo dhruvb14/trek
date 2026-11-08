@@ -85,6 +85,23 @@ The connect screen has a collapsible **Access through a proxy** section (`client
 | 4 Subresources, `/ws` | proxy cookie; mTLS via the plugin hook | GET: interception. `/ws`: proxy cookie. mTLS via `onReceivedClientCertRequest` |
 | 5 Native | `TrekAccessSession.shared` for the offline copy and the watch | (no native server calls) |
 
+### Proxy sign-in in the WebView (Pangolin, Cloudflare Access)
+
+The UI already handles an expired proxy session. A failed API call with a proxy-wall probe unregisters the service worker and reloads (`client/src/api/client.ts`), and the proxy redirects that page load to its login page. Capacitor sends any top-level page on another host to the system browser, though, so in the app the login landed in Safari or Chrome and the cookie never reached the WebView.
+
+The fix is a list of **sign-in domains** in the access section:
+- Exact hosts, or `*.` plus a domain of at least two labels. At most 8.
+- Validated by `validateLoginHosts`, and again natively.
+- Stored natively and returned by `getAccess`; set with `setLoginHosts`; capability `proxyLogin`.
+
+`TrekShellPlugin.shouldOverrideLoad`, Capacitor's hook on both platforms, keeps a main-frame page on those domains in the WebView. Everything else keeps Capacitor's rules.
+
+The login page must not get the native bridge:
+- Android: Capacitor only accepts bridge messages from its allowed origins, and the sign-in domains are not added to `allowNavigation`.
+- iOS: Capacitor's message handler takes messages from any page, so while sign-in domains are set, `TrekBridgeOriginGate` replaces the `bridge` handler and passes on only messages from the server's origin and the bundled address screen.
+
+Google and Microsoft refuse sign-in inside embedded WebViews (`disallowed_useragent`). A proxy whose login hands off to them still needs headers (a service token) in the app.
+
 ## Security notes
 
 - Header values are secrets: kept in the Keychain or KeyStore-encrypted, never logged, never sent to another origin. The injected script makes them readable to the server's own page. That's the origin that receives them anyway.
@@ -100,6 +117,7 @@ The connect screen has a collapsible **Access through a proxy** section (`client
 - [x] `trekShell.ts`: methods, types, features
 - [x] iOS: `TrekAccess.swift`, navigation re-issue, user script, challenge hook, plugin methods, offline copy + watch through `TrekAccessSession`
 - [x] Android: `access/TrekAccess.kt`, GET + service-worker interception, `onReceivedClientCertRequest`, document-start script, plugin methods, `androidx.webkit` dependency, JVM tests
+- [x] Sign-in domains kept in the WebView (`shouldOverrideLoad`), iOS bridge origin gate, UI field, JVM + vitest tests
 - [x] Wiki: `wiki/Native-Apps.md`
 - [ ] CI build of both native projects (`.github/workflows/native.yml`) green
 - [ ] Device verification:

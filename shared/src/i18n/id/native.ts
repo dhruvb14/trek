@@ -151,6 +151,11 @@ const native: TranslationStrings = {
   'native.access.errorTooMany': 'Itu lebih banyak header daripada yang dapat dikirim aplikasi.',
   'native.access.errorPassword': 'Kata sandi ini tidak membuka sertifikat tersebut.',
   'native.access.errorCertificate': 'Aplikasi tidak dapat memakai sertifikat ini. Pilih file .p12 atau .pfx.',
+  'native.access.loginHosts': 'Domain masuk',
+  'native.access.loginHostsHint':
+    'Domain halaman masuk proxy, seperti domain tim Cloudflare Access atau alamat Pangolin Anda. Domain ini terbuka di dalam aplikasi, jadi masuk di sana membuat Anda tetap masuk di sini.',
+  'native.access.errorLoginHost': '{host} bukan domain yang dapat dibuka aplikasi.',
+  'native.access.errorLoginHostsTooMany': 'Itu lebih banyak domain masuk daripada yang dapat disimpan aplikasi.',
 };
 
 export default native;

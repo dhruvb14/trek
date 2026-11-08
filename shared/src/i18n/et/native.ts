@@ -150,6 +150,11 @@ const native: TranslationStrings = {
   'native.access.errorTooMany': 'Seda on rohkem päiseid, kui rakendus saata suudab.',
   'native.access.errorPassword': 'See parool ei ava seda sertifikaati.',
   'native.access.errorCertificate': 'Rakendus ei saa seda sertifikaati kasutada. Vali .p12 või .pfx fail.',
+  'native.access.loginHosts': 'Sisselogimise domeenid',
+  'native.access.loginHostsHint':
+    'Puhverserveri sisselogimislehe domeenid, näiteks Cloudflare Accessi meeskonnadomeen või Pangolini aadress. Need avanevad rakenduses, nii et seal sisse logides oled ka siin sisse logitud.',
+  'native.access.errorLoginHost': '{host} ei ole domeen, mida rakendus avada saab.',
+  'native.access.errorLoginHostsTooMany': 'Seda on rohkem sisselogimise domeene, kui rakendus hoida suudab.',
 };
 
 export default native;

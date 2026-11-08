@@ -55,6 +55,7 @@ public class TrekShellPlugin: CAPPlugin, CAPBridgedPlugin, ASWebAuthenticationPr
         CAPPluginMethod(name: "chooseClientCertificate", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "clearClientCertificate", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "probe", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "setLoginHosts", returnType: CAPPluginReturnPromise),
     ]
 
     /// What this binary offers the server's UI, raised with every native feature
@@ -66,7 +67,7 @@ public class TrekShellPlugin: CAPPlugin, CAPBridgedPlugin, ASWebAuthenticationPr
     /// builds a snapshot for nothing; "wallet" only where Wallet can take a pass (an
     /// iPhone: an iPad has no Wallet app), so the UI offers no button that does nothing.
     static var features: [String] {
-        var names = ["capabilities", "edgeBack", "tileCache", "biometricLock", "geolocation", "sharedFiles", "nativePush", "widgets", "liveActivity", "widgetTrips", "storeKit", "shareSheet", "keyCommands", "accessHeaders", "clientCertificate"]
+        var names = ["capabilities", "edgeBack", "tileCache", "biometricLock", "geolocation", "sharedFiles", "nativePush", "widgets", "liveActivity", "widgetTrips", "storeKit", "shareSheet", "keyCommands", "accessHeaders", "clientCertificate", "proxyLogin"]
         if canAddWalletPasses { names.append("wallet") }
         if TrekWatchLink.isAvailable { names.append("watch") }
         return names
@@ -426,6 +427,7 @@ public class TrekShellPlugin: CAPPlugin, CAPBridgedPlugin, ASWebAuthenticationPr
         call.resolve([
             "headers": TrekAccess.headers.map { ["name": $0.name, "value": $0.value] },
             "certificate": TrekAccess.certificateInfo() ?? NSNull(),
+            "loginHosts": TrekAccess.loginHosts,
         ])
     }
 
@@ -445,6 +447,24 @@ public class TrekShellPlugin: CAPPlugin, CAPBridgedPlugin, ASWebAuthenticationPr
             return
         }
         call.resolve()
+    }
+
+    /// Takes effect from the next load of the server, like the headers.
+    @objc func setLoginHosts(_ call: CAPPluginCall) {
+        guard let hosts = call.getArray("hosts", String.self), TrekAccess.setLoginHosts(hosts) else {
+            call.reject("The sign-in domains were not accepted", "INVALID")
+            return
+        }
+        call.resolve()
+    }
+
+    /// A page on one of the proxy's sign-in domains stays in the WebView
+    /// (false: load it here); everything else goes on to Capacitor's own rules.
+    override public func shouldOverrideLoad(_ navigationAction: WKNavigationAction) -> NSNumber? {
+        guard navigationAction.targetFrame?.isMainFrame == true, TrekAccess.isLoginHost(navigationAction.request.url) else {
+            return nil
+        }
+        return false
     }
 
     @objc func importClientCertificate(_ call: CAPPluginCall) {

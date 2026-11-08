@@ -146,6 +146,11 @@ const native: TranslationStrings = {
   'native.access.errorTooMany': 'אלה יותר כותרות ממה שהאפליקציה יכולה לשלוח.',
   'native.access.errorPassword': 'הסיסמה לא פותחת את האישור הזה.',
   'native.access.errorCertificate': 'האפליקציה לא יכולה להשתמש באישור הזה. יש לבחור קובץ ‎.p12 או ‎.pfx.',
+  'native.access.loginHosts': 'דומיינים להתחברות',
+  'native.access.loginHostsHint':
+    'הדומיינים של דף ההתחברות של הפרוקסי, למשל דומיין הצוות ב-Cloudflare Access או כתובת ה-Pangolin. הם נפתחים בתוך האפליקציה, כך שהתחברות שם תקפה גם כאן.',
+  'native.access.errorLoginHost': '{host} אינו דומיין שהאפליקציה יכולה לפתוח.',
+  'native.access.errorLoginHostsTooMany': 'אלה יותר דומיינים להתחברות ממה שהאפליקציה יכולה לשמור.',
 };
 
 export default native;

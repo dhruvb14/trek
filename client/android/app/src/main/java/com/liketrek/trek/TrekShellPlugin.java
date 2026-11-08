@@ -62,6 +62,7 @@ public class TrekShellPlugin extends Plugin {
         "windowLayout",
         "accessHeaders",
         "clientCertificate",
+        "proxyLogin",
     };
 
     /** liketrek's push relay: the endpoint for this device's FCM token (trek-hosted push-relay.ts). */
@@ -391,6 +392,7 @@ public class TrekShellPlugin extends Plugin {
             String alias = TrekAccess.INSTANCE.alias(getContext());
             TrekAccess.CertificateInfo info = alias == null ? null : TrekAccess.INSTANCE.describe(getContext(), alias);
             result.put("certificate", info == null ? JSONObject.NULL : certificateJson(info));
+            result.put("loginHosts", new org.json.JSONArray(TrekAccess.INSTANCE.loginHosts(getContext())));
             call.resolve(result);
         });
     }
@@ -417,6 +419,40 @@ public class TrekShellPlugin extends Plugin {
             return;
         }
         call.resolve();
+    }
+
+    /** Takes effect from the next load of the server, like the headers. */
+    @PluginMethod
+    public void setLoginHosts(PluginCall call) {
+        com.getcapacitor.JSArray rows = call.getArray("hosts");
+        if (rows == null) {
+            call.reject("hosts is required", "INVALID");
+            return;
+        }
+        java.util.List<String> hosts = new java.util.ArrayList<>();
+        for (int i = 0; i < rows.length(); i++) {
+            Object entry = rows.opt(i);
+            if (!(entry instanceof String)) {
+                call.reject("The sign-in domains were not accepted", "INVALID");
+                return;
+            }
+            hosts.add((String) entry);
+        }
+        if (!TrekAccess.INSTANCE.setLoginHosts(getContext(), hosts)) {
+            call.reject("The sign-in domains were not accepted", "INVALID");
+            return;
+        }
+        call.resolve();
+    }
+
+    /**
+     * A page on one of the proxy's sign-in domains stays in the WebView (false:
+     * load it here) instead of opening in the browser; null leaves every other
+     * URL to Capacitor's own rules.
+     */
+    @Override
+    public Boolean shouldOverrideLoad(Uri url) {
+        return TrekAccess.INSTANCE.isLoginPage(getContext(), url.toString()) ? Boolean.FALSE : null;
     }
 
     /** iOS imports a .p12; Android uses the certificates the system holds. */

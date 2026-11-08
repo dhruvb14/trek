@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-// FE-NATIVE-ACCESS-001 to FE-NATIVE-ACCESS-006
+// FE-NATIVE-ACCESS-001 to FE-NATIVE-ACCESS-008
 //
 // "Access through a proxy" on the native connect screen (native-shell/access.ts):
 // the rows it shows from what the binary holds, the checks it runs before the
@@ -50,13 +50,14 @@ describe('native shell: access through a proxy', () => {
     await flush();
     expect((section.element as HTMLDetailsElement).open).toBe(false);
     expect(inputs(section.element)).toHaveLength(0);
-    expect(section.collect()).toEqual({ ok: true, headers: [] });
+    expect(section.collect()).toEqual({ headers: [], loginHosts: [] });
   });
 
   it('FE-NATIVE-ACCESS-002: opens on the stored headers and certificate, values masked', async () => {
     shell.getAccess.mockResolvedValue({
       headers: [{ name: 'CF-Access-Client-Id', value: 'id' }],
       certificate: { subject: 'alice' },
+      loginHosts: ['team.cloudflareaccess.com'],
     });
     const section = accessSection(t);
     await flush();
@@ -65,7 +66,10 @@ describe('native shell: access through a proxy', () => {
     expect(name.value).toBe('CF-Access-Client-Id');
     expect(value.type).toBe('password');
     expect(section.element.querySelector('.access-subject')?.textContent).toBe('alice');
-    expect(section.collect()).toEqual({ ok: true, headers: [{ name: 'CF-Access-Client-Id', value: 'id' }] });
+    expect(section.collect()).toEqual({
+      headers: [{ name: 'CF-Access-Client-Id', value: 'id' }],
+      loginHosts: ['team.cloudflareaccess.com'],
+    });
   });
 
   it('FE-NATIVE-ACCESS-003: marks the first wrong row and says which', async () => {
@@ -78,13 +82,12 @@ describe('native shell: access through a proxy', () => {
     v1.value = 'fine';
     n2.value = 'Cookie';
     v2.value = 'nope';
-    const result = section.collect();
-    expect(result).toEqual({ ok: false, problem: 'reserved', index: 1 });
+    expect(section.collect()).toBeNull();
     expect(section.element.querySelectorAll('.access-row')[1].classList.contains('bad')).toBe(true);
     expect(section.element.querySelector('.error')?.textContent).toBe('native.access.errorName:{"row":"2"}');
     // Removing the row clears the problem.
     (section.element.querySelectorAll('.access-remove')[1] as HTMLButtonElement).click();
-    expect(section.collect()).toEqual({ ok: true, headers: [{ name: 'X-Ok', value: 'fine' }] });
+    expect(section.collect()).toEqual({ headers: [{ name: 'X-Ok', value: 'fine' }], loginHosts: [] });
   });
 
   it('FE-NATIVE-ACCESS-004: names each problem with its key', () => {
@@ -129,5 +132,35 @@ describe('native shell: access through a proxy', () => {
     button(section.element, 'native.access.chooseCertificate').click();
     await vi.waitFor(() => expect(section.element.querySelector('.access-subject')?.textContent).toBe('bob'));
     expect(shell.importClientCertificate).not.toHaveBeenCalled();
+  });
+
+  it('FE-NATIVE-ACCESS-007: shows the stored sign-in domains and takes them as typed', async () => {
+    shell.getAccess.mockResolvedValue({
+      headers: [],
+      certificate: null,
+      loginHosts: ['a.example.com', '*.example.org'],
+    });
+    const section = accessSection(t);
+    await flush();
+    expect((section.element as HTMLDetailsElement).open).toBe(true);
+    const field = section.element.querySelector<HTMLInputElement>('input[aria-label="native.access.loginHosts"]');
+    if (!field) throw new Error('no sign-in domains field');
+    expect(field.value).toBe('a.example.com, *.example.org');
+    field.value = 'https://Team.CloudflareAccess.com/cdn-cgi/access/login, pangolin.example.com';
+    expect(section.collect()).toEqual({
+      headers: [],
+      loginHosts: ['team.cloudflareaccess.com', 'pangolin.example.com'],
+    });
+  });
+
+  it('FE-NATIVE-ACCESS-008: names the sign-in domain that is not one', async () => {
+    const section = accessSection(t);
+    await flush();
+    const field = section.element.querySelector<HTMLInputElement>('input[aria-label="native.access.loginHosts"]');
+    if (!field) throw new Error('no sign-in domains field');
+    field.value = 'ok.example.com, not a_host';
+    expect(section.collect()).toBeNull();
+    expect(field.parentElement?.classList.contains('bad')).toBe(true);
+    expect(section.element.querySelector('.error')?.textContent).toBe('native.access.errorLoginHost:{"host":"a_host"}');
   });
 });

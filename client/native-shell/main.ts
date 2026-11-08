@@ -281,12 +281,13 @@ function showConnect(prefill = '', opts: { back?: boolean } = {}): void {
     input.disabled = true;
     submit.disabled = true;
     const checked = access.collect();
-    if ('problem' in checked) {
+    if (!checked) {
       fail(null);
       return;
     }
     submit.replaceChildren(el('span', { className: 'spinner' }), t('native.connect.checking'));
     await TrekShell.setAccessHeaders({ headers: checked.headers });
+    await TrekShell.setLoginHosts({ hosts: checked.loginHosts });
     const result = await probeServer(input.value, accessGet);
     if (result.ok) {
       await connected(result.url, true);
@@ -480,7 +481,9 @@ function planCard(plan: CloudPlan, interval: 'month' | 'year', offer: Offer): HT
       // No price yet (orders not open): the plan shows without one rather than with an empty one.
       // The price is figures and a currency sign: one left-to-right run, so Arabic
       // keeps "5,99 €" whole, with the period standing apart beside it.
-      ...(label ? [el('span', { className: 'plan-price' }, el('bdi', { dir: 'ltr' }, label), el('small', {}, per))] : [])
+      ...(label
+        ? [el('span', { className: 'plan-price' }, el('bdi', { dir: 'ltr' }, label), el('small', {}, per))]
+        : [])
     ),
     el(
       'div',
@@ -962,7 +965,10 @@ async function runDemo(button: HTMLButtonElement, error?: HTMLElement): Promise<
  * there (`keepAccess`); the demo and a TREK Cloud instance get none.
  */
 async function connected(url: string, keepAccess = false): Promise<void> {
-  if (!keepAccess) await TrekShell.setAccessHeaders({ headers: [] });
+  if (!keepAccess) {
+    await TrekShell.setAccessHeaders({ headers: [] });
+    await TrekShell.setLoginHosts({ hosts: [] });
+  }
   void notify(NotificationType.Success);
   const host = (() => {
     try {

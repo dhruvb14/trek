@@ -154,6 +154,11 @@ const native: TranslationStrings = {
   'native.access.errorPassword': 'Ο κωδικός δεν ανοίγει αυτό το πιστοποιητικό.',
   'native.access.errorCertificate':
     'Η εφαρμογή δεν μπορεί να χρησιμοποιήσει αυτό το πιστοποιητικό. Επιλέξτε αρχείο .p12 ή .pfx.',
+  'native.access.loginHosts': 'Τομείς σύνδεσης',
+  'native.access.loginHostsHint':
+    'Οι τομείς της σελίδας σύνδεσης του proxy, όπως ο τομέας ομάδας του Cloudflare Access ή η διεύθυνση του Pangolin. Ανοίγουν μέσα στην εφαρμογή, ώστε η σύνδεση εκεί να ισχύει και εδώ.',
+  'native.access.errorLoginHost': 'Το {host} δεν είναι τομέας που μπορεί να ανοίξει η εφαρμογή.',
+  'native.access.errorLoginHostsTooMany': 'Είναι περισσότεροι τομείς σύνδεσης από όσους μπορεί να κρατήσει η εφαρμογή.',
 };
 
 export default native;

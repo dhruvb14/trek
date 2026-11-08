@@ -148,6 +148,11 @@ const native: TranslationStrings = {
   'native.access.errorTooMany': '앱이 보낼 수 있는 것보다 헤더가 많습니다.',
   'native.access.errorPassword': '이 비밀번호로는 인증서를 열 수 없습니다.',
   'native.access.errorCertificate': '앱에서 이 인증서를 사용할 수 없습니다. .p12 또는 .pfx 파일을 선택하세요.',
+  'native.access.loginHosts': '로그인 도메인',
+  'native.access.loginHostsHint':
+    'Cloudflare Access 팀 도메인이나 Pangolin 주소처럼 프록시 로그인 페이지의 도메인입니다. 앱 안에서 열리므로 그곳에서 로그인하면 여기서도 로그인 상태가 유지됩니다.',
+  'native.access.errorLoginHost': '{host}은(는) 앱에서 열 수 있는 도메인이 아닙니다.',
+  'native.access.errorLoginHostsTooMany': '앱이 저장할 수 있는 것보다 로그인 도메인이 많습니다.',
 };
 
 export default native;
