@@ -135,6 +135,23 @@ const native: TranslationStrings = {
   'native.widget.votes': 'phiếu',
   'native.widget.noMessages': 'Chưa có tin nhắn',
   'native.widget.departure': 'Khởi hành',
+  'native.access.toggle': 'Truy cập qua proxy',
+  'native.access.hint':
+    'Dành cho máy chủ đứng sau proxy zero trust như Cloudflare Access. Ứng dụng chỉ gửi chúng tới máy chủ này.',
+  'native.access.headerName': 'Tên header',
+  'native.access.headerValue': 'Giá trị',
+  'native.access.addHeader': 'Thêm header',
+  'native.access.removeHeader': 'Xóa header',
+  'native.access.certificate': 'Chứng chỉ máy khách',
+  'native.access.chooseCertificate': 'Chọn chứng chỉ',
+  'native.access.certificatePassword': 'Mật khẩu chứng chỉ',
+  'native.access.removeCertificate': 'Xóa chứng chỉ',
+  'native.access.errorName': 'Header {row} có tên mà ứng dụng không thể gửi.',
+  'native.access.errorValue': 'Header {row} cần giá trị trên một dòng.',
+  'native.access.errorDuplicate': 'Header {row} đã có trong danh sách.',
+  'native.access.errorTooMany': 'Số header nhiều hơn mức ứng dụng có thể gửi.',
+  'native.access.errorPassword': 'Mật khẩu không mở được chứng chỉ này.',
+  'native.access.errorCertificate': 'Ứng dụng không dùng được chứng chỉ này. Hãy chọn tệp .p12 hoặc .pfx.',
 };
 
 export default native;

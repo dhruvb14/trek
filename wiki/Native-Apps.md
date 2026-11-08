@@ -34,6 +34,20 @@ The app keeps the trips you choose offline the same way the browser does, includ
 
 The app accepts plain http on purpose, because a server at home is often reached as `http://192.168.x.x:3001` or over a VPN such as Tailscale. Use https for anything reachable from the internet. iOS asks once for access to the local network; allow it, or the app cannot reach a server on your network.
 
+## Behind a zero-trust proxy or with a client certificate
+
+If your server sits behind Cloudflare Access, Pomerium, oauth2-proxy or another identity-aware proxy, or asks for a client certificate (mutual TLS), open **Access through a proxy** under the address field before you connect.
+
+- **Custom headers**: name and value pairs the app sends to your server and nowhere else, for example a Cloudflare Access service token as `CF-Access-Client-Id` and `CF-Access-Client-Secret`, or `Authorization: Bearer …` for a proxy that takes a static token. Header names TREK or the browser use themselves (`Cookie`, `Host`, `Origin`, `X-Idempotency-Key`, …) are refused. The values are kept in the iOS Keychain or, on Android, encrypted with a key that never leaves the device's key store.
+- **Client certificate**: on iOS, enter the certificate's password and pick a `.p12` or `.pfx` file; the app imports it into its own Keychain. iOS reads only files with modern encryption: re-export an old file with `openssl pkcs12 -export` from OpenSSL 3. On Android, **Choose certificate** opens the system's certificate list, which can also install a file; the key stays in Android's store and the app only remembers which one you picked. The app offers the certificate to your server's host only.
+
+What a WebView can and cannot do decides how the proxy has to be set up:
+
+- The app adds the headers to page loads, to every API call of the TREK interface, and on Android to every file it loads from the server. **On iOS, images, scripts and the live-sync connection (`/ws`) cannot carry custom headers, and on Android the live-sync connection cannot.** They work when the proxy answers the first authenticated request with a session cookie, which Cloudflare Access (`CF_Authorization`), Pomerium and oauth2-proxy do. A proxy that checks the header on every request and sets no cookie has to let those requests through another way.
+- A client certificate reaches every request, the live-sync connection included.
+- Single sign-on and passkeys run in the system browser (see **Signing in**), which knows neither the headers nor the app's certificate. There the proxy's own sign-in in the browser, or a certificate installed in the browser, gets you through.
+- Headers you change take effect when the app next connects. The demo and TREK Cloud never get them.
+
 ## Files and downloads
 
 Exports, attachments and backup codes open in the system share sheet, from where you save them to Files, open them in another app or send them on.

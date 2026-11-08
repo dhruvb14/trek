@@ -134,6 +134,23 @@ const native: TranslationStrings = {
   'native.widget.votes': '票',
   'native.widget.noMessages': 'まだメッセージはありません',
   'native.widget.departure': '出発',
+  'native.access.toggle': 'プロキシ経由のアクセス',
+  'native.access.hint':
+    'Cloudflare Access などのゼロトラストプロキシの背後にあるサーバー向けです。アプリはこのサーバーにだけ送信します。',
+  'native.access.headerName': 'ヘッダー名',
+  'native.access.headerValue': '値',
+  'native.access.addHeader': 'ヘッダーを追加',
+  'native.access.removeHeader': 'ヘッダーを削除',
+  'native.access.certificate': 'クライアント証明書',
+  'native.access.chooseCertificate': '証明書を選択',
+  'native.access.certificatePassword': '証明書のパスワード',
+  'native.access.removeCertificate': '証明書を削除',
+  'native.access.errorName': 'ヘッダー {row} の名前はアプリから送信できません。',
+  'native.access.errorValue': 'ヘッダー {row} には 1 行の値が必要です。',
+  'native.access.errorDuplicate': 'ヘッダー {row} はすでに一覧にあります。',
+  'native.access.errorTooMany': 'アプリが送信できる数を超えるヘッダーです。',
+  'native.access.errorPassword': 'このパスワードでは証明書を開けません。',
+  'native.access.errorCertificate': 'この証明書はアプリで使用できません。.p12 または .pfx ファイルを選んでください。',
 };
 
 export default native;

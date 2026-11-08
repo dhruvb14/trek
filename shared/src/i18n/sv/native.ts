@@ -133,6 +133,23 @@ const native: TranslationStrings = {
   'native.widget.votes': 'röster',
   'native.widget.noMessages': 'Inga meddelanden än',
   'native.widget.departure': 'Avresa',
+  'native.access.toggle': 'Åtkomst via en proxy',
+  'native.access.hint':
+    'För en server bakom en zero trust-proxy som Cloudflare Access. Appen skickar dem bara till den här servern.',
+  'native.access.headerName': 'Rubrikens namn',
+  'native.access.headerValue': 'Värde',
+  'native.access.addHeader': 'Lägg till rubrik',
+  'native.access.removeHeader': 'Ta bort rubrik',
+  'native.access.certificate': 'Klientcertifikat',
+  'native.access.chooseCertificate': 'Välj certifikat',
+  'native.access.certificatePassword': 'Certifikatets lösenord',
+  'native.access.removeCertificate': 'Ta bort certifikat',
+  'native.access.errorName': 'Rubrik {row} har ett namn som appen inte kan skicka.',
+  'native.access.errorValue': 'Rubrik {row} behöver ett värde på en enda rad.',
+  'native.access.errorDuplicate': 'Rubrik {row} finns redan i listan.',
+  'native.access.errorTooMany': 'Det är fler rubriker än appen kan skicka.',
+  'native.access.errorPassword': 'Lösenordet öppnar inte det här certifikatet.',
+  'native.access.errorCertificate': 'Appen kan inte använda det här certifikatet. Välj en .p12- eller .pfx-fil.',
 };
 
 export default native;

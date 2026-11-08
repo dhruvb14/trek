@@ -7,6 +7,7 @@ import android.view.KeyboardShortcutGroup;
 import android.view.Menu;
 import android.view.View;
 import com.getcapacitor.BridgeActivity;
+import com.liketrek.trek.access.TrekAccess;
 import com.liketrek.trek.screen.TrekKeyCommands;
 import com.liketrek.trek.tiles.TrekTileStore;
 import com.liketrek.trek.widget.TrekWidgetUpdater;
@@ -36,7 +37,14 @@ public class MainActivity extends BridgeActivity {
         // scroller natively. It scales the whole view, top bar and bottom dock included.
         bridge.getWebView().setOverScrollMode(View.OVER_SCROLL_NEVER);
         // Set before any WebView callback can run: they are posted to this thread.
-        if (onServer) bridge.setWebViewClient(new TrekWebViewClient(bridge, this::showAddressScreen));
+        TrekAccess.INSTANCE.setServer(onServer ? server : null);
+        if (onServer) {
+            bridge.setWebViewClient(new TrekWebViewClient(bridge, this::showAddressScreen));
+            // The access headers for a proxy in front of the server: on the UI's
+            // fetch/XHR calls, and on what its service worker loads.
+            TrekAccess.INSTANCE.installScript(this, bridge.getWebView());
+            TrekAccess.INSTANCE.interceptServiceWorker(this, request -> bridge.getLocalServer().shouldInterceptRequest(request));
+        }
         TrekSharedFiles.receive(this, getIntent());
         // Android 15's widget picker draws the widgets live from a sample trip.
         TrekWidgetUpdater.publishPreviews(this);

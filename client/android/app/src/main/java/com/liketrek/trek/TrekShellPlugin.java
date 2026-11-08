@@ -17,6 +17,7 @@ import com.getcapacitor.annotation.CapacitorPlugin;
 import com.getcapacitor.annotation.Permission;
 import com.getcapacitor.annotation.PermissionCallback;
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.liketrek.trek.access.TrekAccess;
 import org.json.JSONObject;
 
 /** The native half of client/src/native/trekShell.ts. */
@@ -59,6 +60,8 @@ public class TrekShellPlugin extends Plugin {
         "googleWallet",
         "keyCommands",
         "windowLayout",
+        "accessHeaders",
+        "clientCertificate",
     };
 
     /** liketrek's push relay: the endpoint for this device's FCM token (trek-hosted push-relay.ts). */
@@ -373,6 +376,128 @@ public class TrekShellPlugin extends Plugin {
         authCallId = null;
         authScheme = null;
         authBrowserOpen = false;
+    }
+
+    // ---- Access through a proxy (access/TrekAccess.kt) ----
+
+    /** Network and KeyChain calls stay off the plugin thread, which every other call shares. */
+    private final java.util.concurrent.ExecutorService accessExecutor = java.util.concurrent.Executors.newSingleThreadExecutor();
+
+    @PluginMethod
+    public void getAccess(PluginCall call) {
+        accessExecutor.execute(() -> {
+            JSObject result = new JSObject();
+            result.put("headers", TrekAccess.INSTANCE.headersToJson(TrekAccess.INSTANCE.headers(getContext())));
+            String alias = TrekAccess.INSTANCE.alias(getContext());
+            TrekAccess.CertificateInfo info = alias == null ? null : TrekAccess.INSTANCE.describe(getContext(), alias);
+            result.put("certificate", info == null ? JSONObject.NULL : certificateJson(info));
+            call.resolve(result);
+        });
+    }
+
+    /** Takes effect from the next load of the server: the address screen sets them before it connects. */
+    @PluginMethod
+    public void setAccessHeaders(PluginCall call) {
+        com.getcapacitor.JSArray rows = call.getArray("headers");
+        if (rows == null) {
+            call.reject("headers is required", "INVALID");
+            return;
+        }
+        java.util.List<TrekAccess.Header> headers = new java.util.ArrayList<>();
+        for (int i = 0; i < rows.length(); i++) {
+            JSONObject row = rows.optJSONObject(i);
+            if (row == null || !(row.opt("name") instanceof String) || !(row.opt("value") instanceof String)) {
+                call.reject("The headers were not accepted", "INVALID");
+                return;
+            }
+            headers.add(new TrekAccess.Header(row.optString("name"), row.optString("value")));
+        }
+        if (!TrekAccess.INSTANCE.setHeaders(getContext(), headers)) {
+            call.reject("The headers were not accepted", "INVALID");
+            return;
+        }
+        call.resolve();
+    }
+
+    /** iOS imports a .p12; Android uses the certificates the system holds. */
+    @PluginMethod
+    public void importClientCertificate(PluginCall call) {
+        call.unimplemented("Choose a certificate from the system with chooseClientCertificate on Android");
+    }
+
+    /**
+     * The system's certificate chooser, which also installs a .p12 the user
+     * picks there. Only the alias is kept; the key never leaves the KeyChain.
+     */
+    @PluginMethod
+    public void chooseClientCertificate(PluginCall call) {
+        String server = TrekServerStore.getUrl(getContext());
+        Uri uri = server == null ? null : Uri.parse(server);
+        android.security.KeyChain.choosePrivateKeyAlias(
+            getActivity(),
+            alias -> {
+                JSObject result = new JSObject();
+                if (alias == null) {
+                    result.put("certificate", JSONObject.NULL);
+                    call.resolve(result);
+                    return;
+                }
+                TrekAccess.CertificateInfo info = TrekAccess.INSTANCE.describe(getContext(), alias);
+                if (info == null) {
+                    call.reject("The certificate cannot be used", "INVALID");
+                    return;
+                }
+                TrekAccess.INSTANCE.setAlias(getContext(), alias);
+                result.put("certificate", certificateJson(info));
+                call.resolve(result);
+            },
+            null,
+            null,
+            uri,
+            TrekAccess.INSTANCE.alias(getContext())
+        );
+    }
+
+    @PluginMethod
+    public void clearClientCertificate(PluginCall call) {
+        TrekAccess.INSTANCE.setAlias(getContext(), null);
+        call.resolve();
+    }
+
+    /** The address screen's check of a server, with the access headers and certificate when `access` is set. */
+    @PluginMethod
+    public void probe(PluginCall call) {
+        String url = call.getString("url");
+        Uri parsed = url == null ? null : Uri.parse(url);
+        if (parsed == null || parsed.getHost() == null || !("https".equals(parsed.getScheme()) || "http".equals(parsed.getScheme()))) {
+            call.reject("A http(s) URL is required", "INVALID");
+            return;
+        }
+        int timeout = call.getInt("timeoutMs", 8000);
+        boolean access = Boolean.TRUE.equals(call.getBoolean("access", false));
+        accessExecutor.execute(() -> {
+            try {
+                TrekAccess.ProbeAnswer answer = TrekAccess.INSTANCE.probe(getContext(), url, timeout, access);
+                JSObject result = new JSObject();
+                result.put("status", answer.getStatus());
+                result.put("url", answer.getUrl());
+                try {
+                    result.put("data", new JSObject(answer.getBody()));
+                } catch (org.json.JSONException notJson) {
+                    result.put("data", answer.getBody());
+                }
+                call.resolve(result);
+            } catch (java.io.IOException | RuntimeException error) {
+                call.reject(error.getMessage() == null ? "No answer" : error.getMessage(), "UNREACHABLE");
+            }
+        });
+    }
+
+    private static JSObject certificateJson(TrekAccess.CertificateInfo info) {
+        JSObject json = new JSObject();
+        json.put("subject", info.getSubject());
+        if (info.getExpires() != null) json.put("expires", info.getExpires());
+        return json;
     }
 
     /** iOS only: Android keeps the service worker, which already starts TREK offline. */

@@ -133,6 +133,23 @@ const native: TranslationStrings = {
   'native.widget.votes': 'votes',
   'native.widget.noMessages': 'No messages yet',
   'native.widget.departure': 'Departure',
+  'native.access.toggle': 'Access through a proxy',
+  'native.access.hint':
+    'For a server behind a zero-trust proxy such as Cloudflare Access. The app sends these to this server only.',
+  'native.access.headerName': 'Header name',
+  'native.access.headerValue': 'Value',
+  'native.access.addHeader': 'Add header',
+  'native.access.removeHeader': 'Remove header',
+  'native.access.certificate': 'Client certificate',
+  'native.access.chooseCertificate': 'Choose certificate',
+  'native.access.certificatePassword': 'Certificate password',
+  'native.access.removeCertificate': 'Remove certificate',
+  'native.access.errorName': 'Header {row} has a name the app cannot send.',
+  'native.access.errorValue': 'Header {row} needs a value on a single line.',
+  'native.access.errorDuplicate': 'Header {row} is already in the list.',
+  'native.access.errorTooMany': 'That is more headers than the app can send.',
+  'native.access.errorPassword': 'The password does not open this certificate.',
+  'native.access.errorCertificate': 'The app cannot use this certificate. Choose a .p12 or .pfx file.',
 };
 
 export default native;

@@ -49,6 +49,12 @@ public class TrekShellPlugin: CAPPlugin, CAPBridgedPlugin, ASWebAuthenticationPr
         CAPPluginMethod(name: "setWatchSnapshot", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "takeWatchActions", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "setKeyCommands", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "getAccess", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "setAccessHeaders", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "importClientCertificate", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "chooseClientCertificate", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "clearClientCertificate", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "probe", returnType: CAPPluginReturnPromise),
     ]
 
     /// What this binary offers the server's UI, raised with every native feature
@@ -60,7 +66,7 @@ public class TrekShellPlugin: CAPPlugin, CAPBridgedPlugin, ASWebAuthenticationPr
     /// builds a snapshot for nothing; "wallet" only where Wallet can take a pass (an
     /// iPhone: an iPad has no Wallet app), so the UI offers no button that does nothing.
     static var features: [String] {
-        var names = ["capabilities", "edgeBack", "tileCache", "biometricLock", "geolocation", "sharedFiles", "nativePush", "widgets", "liveActivity", "widgetTrips", "storeKit", "shareSheet", "keyCommands"]
+        var names = ["capabilities", "edgeBack", "tileCache", "biometricLock", "geolocation", "sharedFiles", "nativePush", "widgets", "liveActivity", "widgetTrips", "storeKit", "shareSheet", "keyCommands", "accessHeaders", "clientCertificate"]
         if canAddWalletPasses { names.append("wallet") }
         if TrekWatchLink.isAvailable { names.append("watch") }
         return names
@@ -396,7 +402,7 @@ public class TrekShellPlugin: CAPPlugin, CAPBridgedPlugin, ASWebAuthenticationPr
         }
         var request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: 15)
         request.setValue("text/html", forHTTPHeaderField: "Accept")
-        URLSession.shared.dataTask(with: request) { data, response, _ in
+        TrekAccessSession.shared.dataTask(with: request) { data, response, _ in
             guard let data, let http = response as? HTTPURLResponse, http.statusCode == 200,
                   http.value(forHTTPHeaderField: "Content-Type")?.hasPrefix("text/html") == true,
                   TrekServerStore.url == raw else {
@@ -412,6 +418,98 @@ public class TrekShellPlugin: CAPPlugin, CAPBridgedPlugin, ASWebAuthenticationPr
                 call.resolve(["saved": false])
             }
         }.resume()
+    }
+
+    // MARK: - Access through a proxy (TrekAccess.swift)
+
+    @objc func getAccess(_ call: CAPPluginCall) {
+        call.resolve([
+            "headers": TrekAccess.headers.map { ["name": $0.name, "value": $0.value] },
+            "certificate": TrekAccess.certificateInfo() ?? NSNull(),
+        ])
+    }
+
+    /// Takes effect from the next load of the server: the address screen sets
+    /// them before it connects, which builds a new bridge.
+    @objc func setAccessHeaders(_ call: CAPPluginCall) {
+        guard let rows = call.getArray("headers", JSObject.self) else {
+            call.reject("headers is required", "INVALID")
+            return
+        }
+        let headers = rows.compactMap { row -> TrekAccess.Header? in
+            guard let name = row["name"] as? String, let value = row["value"] as? String else { return nil }
+            return TrekAccess.Header(name: name, value: value)
+        }
+        guard headers.count == rows.count, TrekAccess.setHeaders(headers) else {
+            call.reject("The headers were not accepted", "INVALID")
+            return
+        }
+        call.resolve()
+    }
+
+    @objc func importClientCertificate(_ call: CAPPluginCall) {
+        guard let base64 = call.getString("data"), let data = Data(base64Encoded: base64) else {
+            call.reject("data is required", "INVALID")
+            return
+        }
+        do {
+            let subject = try TrekAccess.importIdentity(pkcs12: data, password: call.getString("password") ?? "")
+            call.resolve(["subject": subject])
+        } catch TrekAccess.ImportError.wrongPassword {
+            call.reject("Wrong password", "WRONG_PASSWORD")
+        } catch {
+            call.reject("Not a usable certificate", "INVALID")
+        }
+    }
+
+    /// Android's system chooser; iOS imports a file instead.
+    @objc func chooseClientCertificate(_ call: CAPPluginCall) {
+        call.unimplemented("Import a .p12 with importClientCertificate on iOS")
+    }
+
+    @objc func clearClientCertificate(_ call: CAPPluginCall) {
+        TrekAccess.clearIdentity()
+        call.resolve()
+    }
+
+    /// The address screen's check of a server, through the app's own session so
+    /// the access headers and the certificate reach it when `access` is set.
+    @objc func probe(_ call: CAPPluginCall) {
+        guard let raw = call.getString("url"), let url = URL(string: raw), ["https", "http"].contains(url.scheme), url.host != nil else {
+            call.reject("A http(s) URL is required", "INVALID")
+            return
+        }
+        let timeout = TimeInterval(call.getInt("timeoutMs") ?? 8000) / 1000
+        let client = TrekAccessSession(target: url, access: call.getBool("access") ?? false)
+        var request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: timeout)
+        request.setValue("application/json", forHTTPHeaderField: "Accept")
+        client.dataTask(with: request) { data, response, error in
+            // A session holds its delegate until it is invalidated.
+            client.session.finishTasksAndInvalidate()
+            guard let http = response as? HTTPURLResponse else {
+                call.reject(error?.localizedDescription ?? "No answer", "UNREACHABLE")
+                return
+            }
+            var body: Any = ""
+            if let data {
+                body = (try? JSONSerialization.jsonObject(with: data)) ?? String(data: data, encoding: .utf8) ?? ""
+            }
+            call.resolve(["status": http.statusCode, "data": body, "url": http.url?.absoluteString ?? raw])
+        }.resume()
+    }
+
+    /// The WebView asks for a client certificate (subresources and /ws too):
+    /// the imported identity for the server's host, none for any other. Other
+    /// challenges stay with Capacitor.
+    override public func handleWKWebViewURLAuthenticationChallenge(
+        _ challenge: URLAuthenticationChallenge,
+        completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void
+    ) -> Bool {
+        guard let answer = TrekAccess.clientCertificateAnswer(challenge, allowed: TrekAccess.isServerSpace) else {
+            return false
+        }
+        completionHandler(answer.0, answer.1)
+        return true
     }
 
     @objc func openOfflineCopy(_ call: CAPPluginCall) {

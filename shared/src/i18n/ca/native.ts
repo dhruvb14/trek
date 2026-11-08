@@ -134,6 +134,23 @@ const native: TranslationStrings = {
   'native.widget.votes': 'vots',
   'native.widget.noMessages': 'Encara no hi ha missatges',
   'native.widget.departure': 'Sortida',
+  'native.access.toggle': 'Accés a través d’un proxy',
+  'native.access.hint':
+    'Per a un servidor darrere d’un proxy zero trust com Cloudflare Access. L’app els envia només a aquest servidor.',
+  'native.access.headerName': 'Nom de la capçalera',
+  'native.access.headerValue': 'Valor',
+  'native.access.addHeader': 'Afegeix una capçalera',
+  'native.access.removeHeader': 'Elimina la capçalera',
+  'native.access.certificate': 'Certificat de client',
+  'native.access.chooseCertificate': 'Tria un certificat',
+  'native.access.certificatePassword': 'Contrasenya del certificat',
+  'native.access.removeCertificate': 'Elimina el certificat',
+  'native.access.errorName': 'La capçalera {row} té un nom que l’app no pot enviar.',
+  'native.access.errorValue': 'La capçalera {row} necessita un valor en una sola línia.',
+  'native.access.errorDuplicate': 'La capçalera {row} ja és a la llista.',
+  'native.access.errorTooMany': 'Són més capçaleres de les que l’app pot enviar.',
+  'native.access.errorPassword': 'La contrasenya no obre aquest certificat.',
+  'native.access.errorCertificate': 'L’app no pot fer servir aquest certificat. Tria un fitxer .p12 o .pfx.',
 };
 
 export default native;

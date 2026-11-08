@@ -50,6 +50,22 @@ export default tseslint.config(
   ...tseslint.configs.recommended,
   eslintConfigPrettier,
   {
+    // The script both apps inject into the server's pages, shipped as written
+    // (native-shell/static/access-headers.js): plain browser JavaScript.
+    files: ['native-shell/static/**/*.js'],
+    languageOptions: {
+      sourceType: 'script',
+      globals: {
+        window: 'readonly',
+        location: 'readonly',
+        Headers: 'readonly',
+        URL: 'readonly',
+        // The configuration the apps write in its place.
+        TREK_ACCESS_CONFIG: 'readonly',
+      },
+    },
+  },
+  {
     files: ['src/**/*.{ts,tsx}', 'tests/**/*.{ts,tsx}'],
     plugins: {
       'react-hooks': reactHooks,

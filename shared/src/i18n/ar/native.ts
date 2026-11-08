@@ -130,6 +130,22 @@ const native: TranslationStrings = {
   'native.widget.votes': 'أصوات',
   'native.widget.noMessages': 'لا توجد رسائل بعد',
   'native.widget.departure': 'المغادرة',
+  'native.access.toggle': 'الوصول عبر وكيل',
+  'native.access.hint': 'لخادم خلف وكيل انعدام الثقة مثل Cloudflare Access. يرسلها التطبيق إلى هذا الخادم فقط.',
+  'native.access.headerName': 'اسم الترويسة',
+  'native.access.headerValue': 'القيمة',
+  'native.access.addHeader': 'إضافة ترويسة',
+  'native.access.removeHeader': 'إزالة الترويسة',
+  'native.access.certificate': 'شهادة العميل',
+  'native.access.chooseCertificate': 'اختيار شهادة',
+  'native.access.certificatePassword': 'كلمة مرور الشهادة',
+  'native.access.removeCertificate': 'إزالة الشهادة',
+  'native.access.errorName': 'للترويسة {row} اسم لا يستطيع التطبيق إرساله.',
+  'native.access.errorValue': 'تحتاج الترويسة {row} إلى قيمة في سطر واحد.',
+  'native.access.errorDuplicate': 'الترويسة {row} موجودة في القائمة بالفعل.',
+  'native.access.errorTooMany': 'هذه ترويسات أكثر مما يستطيع التطبيق إرساله.',
+  'native.access.errorPassword': 'كلمة المرور لا تفتح هذه الشهادة.',
+  'native.access.errorCertificate': 'لا يستطيع التطبيق استخدام هذه الشهادة. اختر ملف ‎.p12 أو ‎.pfx.',
 };
 
 export default native;

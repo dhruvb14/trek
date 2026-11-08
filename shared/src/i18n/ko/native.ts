@@ -131,6 +131,23 @@ const native: TranslationStrings = {
   'native.widget.votes': '표',
   'native.widget.noMessages': '아직 메시지가 없습니다',
   'native.widget.departure': '출발',
+  'native.access.toggle': '프록시를 통한 접속',
+  'native.access.hint':
+    'Cloudflare Access 같은 제로 트러스트 프록시 뒤에 있는 서버용입니다. 앱은 이 서버에만 보냅니다.',
+  'native.access.headerName': '헤더 이름',
+  'native.access.headerValue': '값',
+  'native.access.addHeader': '헤더 추가',
+  'native.access.removeHeader': '헤더 삭제',
+  'native.access.certificate': '클라이언트 인증서',
+  'native.access.chooseCertificate': '인증서 선택',
+  'native.access.certificatePassword': '인증서 비밀번호',
+  'native.access.removeCertificate': '인증서 삭제',
+  'native.access.errorName': '헤더 {row}의 이름은 앱에서 보낼 수 없습니다.',
+  'native.access.errorValue': '헤더 {row}에는 한 줄로 된 값이 필요합니다.',
+  'native.access.errorDuplicate': '헤더 {row}은(는) 이미 목록에 있습니다.',
+  'native.access.errorTooMany': '앱이 보낼 수 있는 것보다 헤더가 많습니다.',
+  'native.access.errorPassword': '이 비밀번호로는 인증서를 열 수 없습니다.',
+  'native.access.errorCertificate': '앱에서 이 인증서를 사용할 수 없습니다. .p12 또는 .pfx 파일을 선택하세요.',
 };
 
 export default native;

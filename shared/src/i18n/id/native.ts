@@ -134,6 +134,23 @@ const native: TranslationStrings = {
   'native.widget.votes': 'suara',
   'native.widget.noMessages': 'Belum ada pesan',
   'native.widget.departure': 'Keberangkatan',
+  'native.access.toggle': 'Akses melalui proxy',
+  'native.access.hint':
+    'Untuk server di balik proxy zero trust seperti Cloudflare Access. Aplikasi hanya mengirimkannya ke server ini.',
+  'native.access.headerName': 'Nama header',
+  'native.access.headerValue': 'Nilai',
+  'native.access.addHeader': 'Tambah header',
+  'native.access.removeHeader': 'Hapus header',
+  'native.access.certificate': 'Sertifikat klien',
+  'native.access.chooseCertificate': 'Pilih sertifikat',
+  'native.access.certificatePassword': 'Kata sandi sertifikat',
+  'native.access.removeCertificate': 'Hapus sertifikat',
+  'native.access.errorName': 'Header {row} memiliki nama yang tidak dapat dikirim aplikasi.',
+  'native.access.errorValue': 'Header {row} memerlukan nilai dalam satu baris.',
+  'native.access.errorDuplicate': 'Header {row} sudah ada di daftar.',
+  'native.access.errorTooMany': 'Itu lebih banyak header daripada yang dapat dikirim aplikasi.',
+  'native.access.errorPassword': 'Kata sandi ini tidak membuka sertifikat tersebut.',
+  'native.access.errorCertificate': 'Aplikasi tidak dapat memakai sertifikat ini. Pilih file .p12 atau .pfx.',
 };
 
 export default native;

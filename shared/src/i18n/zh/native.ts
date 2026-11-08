@@ -129,6 +129,22 @@ const native: TranslationStrings = {
   'native.widget.votes': '票',
   'native.widget.noMessages': '还没有消息',
   'native.widget.departure': '出发',
+  'native.access.toggle': '通过代理访问',
+  'native.access.hint': '适用于位于 Cloudflare Access 等零信任代理之后的服务器。应用只会把这些发送给此服务器。',
+  'native.access.headerName': '请求头名称',
+  'native.access.headerValue': '值',
+  'native.access.addHeader': '添加请求头',
+  'native.access.removeHeader': '移除请求头',
+  'native.access.certificate': '客户端证书',
+  'native.access.chooseCertificate': '选择证书',
+  'native.access.certificatePassword': '证书密码',
+  'native.access.removeCertificate': '移除证书',
+  'native.access.errorName': '请求头 {row} 的名称无法由应用发送。',
+  'native.access.errorValue': '请求头 {row} 需要单行的值。',
+  'native.access.errorDuplicate': '请求头 {row} 已在列表中。',
+  'native.access.errorTooMany': '请求头数量超出应用可发送的上限。',
+  'native.access.errorPassword': '此密码无法打开该证书。',
+  'native.access.errorCertificate': '应用无法使用此证书。请选择 .p12 或 .pfx 文件。',
 };
 
 export default native;

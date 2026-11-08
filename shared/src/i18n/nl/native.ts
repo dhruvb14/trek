@@ -133,6 +133,23 @@ const native: TranslationStrings = {
   'native.widget.votes': 'stemmen',
   'native.widget.noMessages': 'Nog geen berichten',
   'native.widget.departure': 'Vertrek',
+  'native.access.toggle': 'Toegang via een proxy',
+  'native.access.hint':
+    'Voor een server achter een zero-trust-proxy zoals Cloudflare Access. De app stuurt dit alleen naar deze server.',
+  'native.access.headerName': 'Naam van de header',
+  'native.access.headerValue': 'Waarde',
+  'native.access.addHeader': 'Header toevoegen',
+  'native.access.removeHeader': 'Header verwijderen',
+  'native.access.certificate': 'Clientcertificaat',
+  'native.access.chooseCertificate': 'Certificaat kiezen',
+  'native.access.certificatePassword': 'Wachtwoord van het certificaat',
+  'native.access.removeCertificate': 'Certificaat verwijderen',
+  'native.access.errorName': 'Header {row} heeft een naam die de app niet kan versturen.',
+  'native.access.errorValue': 'Header {row} heeft een waarde op één regel nodig.',
+  'native.access.errorDuplicate': 'Header {row} staat al in de lijst.',
+  'native.access.errorTooMany': 'Dat zijn meer headers dan de app kan versturen.',
+  'native.access.errorPassword': 'Dit wachtwoord opent het certificaat niet.',
+  'native.access.errorCertificate': 'De app kan dit certificaat niet gebruiken. Kies een .p12- of .pfx-bestand.',
 };
 
 export default native;

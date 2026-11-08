@@ -133,6 +133,23 @@ const native: TranslationStrings = {
   'native.widget.votes': 'głosów',
   'native.widget.noMessages': 'Brak wiadomości',
   'native.widget.departure': 'Wyjazd',
+  'native.access.toggle': 'Dostęp przez serwer proxy',
+  'native.access.hint':
+    'Dla serwera za proxy typu zero trust, np. Cloudflare Access. Aplikacja wysyła je tylko do tego serwera.',
+  'native.access.headerName': 'Nazwa nagłówka',
+  'native.access.headerValue': 'Wartość',
+  'native.access.addHeader': 'Dodaj nagłówek',
+  'native.access.removeHeader': 'Usuń nagłówek',
+  'native.access.certificate': 'Certyfikat klienta',
+  'native.access.chooseCertificate': 'Wybierz certyfikat',
+  'native.access.certificatePassword': 'Hasło certyfikatu',
+  'native.access.removeCertificate': 'Usuń certyfikat',
+  'native.access.errorName': 'Nagłówek {row} ma nazwę, której aplikacja nie może wysłać.',
+  'native.access.errorValue': 'Nagłówek {row} wymaga wartości w jednym wierszu.',
+  'native.access.errorDuplicate': 'Nagłówek {row} jest już na liście.',
+  'native.access.errorTooMany': 'To więcej nagłówków, niż aplikacja może wysłać.',
+  'native.access.errorPassword': 'To hasło nie otwiera tego certyfikatu.',
+  'native.access.errorCertificate': 'Aplikacja nie może użyć tego certyfikatu. Wybierz plik .p12 lub .pfx.',
 };
 
 export default native;

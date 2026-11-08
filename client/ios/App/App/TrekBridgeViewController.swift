@@ -26,6 +26,8 @@ class TrekBridgeViewController: CAPBridgeViewController {
     override func webViewConfiguration(for instanceConfiguration: InstanceConfiguration) -> WKWebViewConfiguration {
         let configuration = super.webViewConfiguration(for: instanceConfiguration)
         configuration.setURLSchemeHandler(tileHandler, forURLScheme: TrekTileSchemeHandler.scheme)
+        // The access headers on the UI's own fetch and XMLHttpRequest calls (TrekAccess.swift).
+        if let script = TrekAccess.userScript() { configuration.userContentController.addUserScript(script) }
         return configuration
     }
 
@@ -389,6 +391,28 @@ final class TrekNavigationProxy: NSObject, WKNavigationDelegate {
 
     override func forwardingTarget(for aSelector: Selector!) -> Any? {
         (inner as AnyObject).responds(to: aSelector) ? inner : nil
+    }
+
+    /// Capacitor decides first (it hands foreign links to Safari). A load of the
+    /// server it allows that went out without the access headers is cancelled
+    /// and sent again with them (TrekAccess.reissue); the cancelled one fails as
+    /// WebKit 102, which `isReplaced` keeps from Capacitor's error page.
+    func webView(
+        _ webView: WKWebView,
+        decidePolicyFor navigationAction: WKNavigationAction,
+        decisionHandler: @escaping (WKNavigationActionPolicy) -> Void
+    ) {
+        let decide: (WKNavigationActionPolicy) -> Void = { policy in
+            if policy == .allow, let request = TrekAccess.reissue(navigationAction) {
+                decisionHandler(.cancel)
+                webView.load(request)
+            } else {
+                decisionHandler(policy)
+            }
+        }
+        if inner.webView?(webView, decidePolicyFor: navigationAction, decisionHandler: decide) == nil {
+            decide(.allow)
+        }
     }
 
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {

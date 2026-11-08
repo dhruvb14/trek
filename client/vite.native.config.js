@@ -7,7 +7,9 @@ import { fileURLToPath } from 'url'
 export default defineConfig({
   root: fileURLToPath(new URL('./native-shell', import.meta.url)),
   base: './',
-  publicDir: false,
+  // static/ is copied as it is: access-headers.js is read by both apps from the
+  // bundle and injected into the server's pages (native-shell/static/access-headers.js).
+  publicDir: 'static',
   build: {
     outDir: fileURLToPath(new URL('./native-dist', import.meta.url)),
     emptyOutDir: true,

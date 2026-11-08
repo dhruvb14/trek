@@ -1,5 +1,7 @@
 import { registerPlugin } from '@capacitor/core';
+import type { AccessHeader } from './accessHeaders';
 import type { NativeCapabilities } from './capabilities';
+import type { ProbeResponse } from './serverAddress';
 
 /**
  * The app's own native plugin, implemented in
@@ -26,6 +28,27 @@ export interface TrekShellPlugin {
    * user closes the browser.
    */
   authenticate(options: { url: string; callbackScheme: string }): Promise<{ url: string }>;
+  /**
+   * Feature accessHeaders: the headers sent to the server's origin only, for a
+   * zero-trust proxy in front of it, and the client certificate offered to it
+   * (feature clientCertificate). Header values are secrets the binary keeps in
+   * the Keychain / an AndroidKeyStore-encrypted store.
+   */
+  getAccess(): Promise<{ headers: AccessHeader[]; certificate: ClientCertificateInfo | null }>;
+  /** Feature accessHeaders: replaces the headers. They reach the WebView from the next load of the server. */
+  setAccessHeaders(options: { headers: AccessHeader[] }): Promise<void>;
+  /** iOS, feature clientCertificate: imports a PKCS#12 (base64). Rejects with WRONG_PASSWORD or INVALID. */
+  importClientCertificate(options: { data: string; password: string }): Promise<ClientCertificateInfo>;
+  /** Android, feature clientCertificate: the system's certificate chooser; null when none was picked. */
+  chooseClientCertificate(): Promise<{ certificate: ClientCertificateInfo | null }>;
+  /** Feature clientCertificate: forgets the certificate (Android: only the app's choice of it). */
+  clearClientCertificate(): Promise<void>;
+  /**
+   * Feature accessHeaders: a GET through the app's own network stack. With
+   * `access`, the stored headers and certificate go to the URL's host (and its
+   * same-host redirects); without, the request carries neither.
+   */
+  probe(options: { url: string; timeoutMs: number; access: boolean }): Promise<ProbeResponse>;
   /** iOS: stores the server's start page for a cold start without network. */
   refreshOfflineCopy(): Promise<{ saved: boolean }>;
   /** iOS: loads that copy under the server's origin. False when there is none. */
@@ -135,6 +158,14 @@ export interface TrekShellPlugin {
     event: 'keyCommand',
     listener: (payload: { id: string }) => void
   ): Promise<{ remove: () => Promise<void> }>;
+}
+
+/** The client certificate the app offers its server, as the binary describes it. */
+export interface ClientCertificateInfo {
+  /** The certificate's subject summary (its common name, as a rule). */
+  subject: string;
+  /** Android: when the certificate stops being valid, as ISO 8601. */
+  expires?: string;
 }
 
 /** What Google Play Billing answers a restore with (Android, feature playBilling), beside iOS's `jws`. */

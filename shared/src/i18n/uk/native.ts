@@ -133,6 +133,23 @@ const native: TranslationStrings = {
   'native.widget.votes': 'голосів',
   'native.widget.noMessages': 'Повідомлень поки немає',
   'native.widget.departure': 'Відʼїзд',
+  'native.access.toggle': 'Доступ через проксі',
+  'native.access.hint':
+    'Для сервера за проксі zero trust, наприклад Cloudflare Access. Застосунок надсилає їх лише цьому серверу.',
+  'native.access.headerName': 'Назва заголовка',
+  'native.access.headerValue': 'Значення',
+  'native.access.addHeader': 'Додати заголовок',
+  'native.access.removeHeader': 'Видалити заголовок',
+  'native.access.certificate': 'Клієнтський сертифікат',
+  'native.access.chooseCertificate': 'Вибрати сертифікат',
+  'native.access.certificatePassword': 'Пароль сертифіката',
+  'native.access.removeCertificate': 'Видалити сертифікат',
+  'native.access.errorName': 'Заголовок {row} має назву, яку застосунок не може надіслати.',
+  'native.access.errorValue': 'Заголовку {row} потрібне значення в один рядок.',
+  'native.access.errorDuplicate': 'Заголовок {row} уже є в списку.',
+  'native.access.errorTooMany': 'Це більше заголовків, ніж застосунок може надіслати.',
+  'native.access.errorPassword': 'Цей пароль не відкриває сертифікат.',
+  'native.access.errorCertificate': 'Застосунок не може використати цей сертифікат. Виберіть файл .p12 або .pfx.',
 };
 
 export default native;
